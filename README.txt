@@ -1,8 +1,8 @@
 BEAT THE AI
 
 PLAY
-Open index.html, or the portable "Endeavour Booth.html", in your browser.
-Keep scoreboard-config.js beside the HTML file.
+Open index.html in your browser.
+Keep game.js and scoreboard-config.js beside the HTML file.
 Choose a nickname and predict the next network speed from each chart.
 Everyone plays the same three examples with a 30-minute forecast horizon.
 Lock in three guesses to compare your average error with the AI forecast.
@@ -26,13 +26,12 @@ In the editable source folder, see SETUP-SCOREBOARD.txt and supabase/setup.sql.
 The setup files do not need to be uploaded to GitHub Pages.
 
 PUBLISH ON GITHUB PAGES
-1. Extract the configured "Endeavour Booth.zip".
-   It contains index.html, scoreboard-config.js, .nojekyll and README.txt.
-   The same four files are also available in the dist folder.
+1. Use this repository's index.html, game.js, scoreboard-config.js, .nojekyll
+   and README.txt together.
 2. Create a public GitHub repository, for example "beat-the-ai".
 3. Keep the included scoreboard-config.js; it is already connected.
-   Upload the four files to the root of the main branch and commit them.
-   Upload the extracted files, not the ZIP or an enclosing folder.
+   Upload those files to the root of the main branch and commit them.
+   When updating an existing site, include game.js alongside index.html.
 4. Open repository Settings > Pages. Under Build and deployment, choose
    "Deploy from a branch", select "main" and "/(root)", then Save.
 5. Wait for deployment, then open the site URL shown in Settings > Pages.
@@ -40,24 +39,24 @@ PUBLISH ON GITHUB PAGES
 6. Generate your QR code using that deployed HTTPS site URL. Test the code with
    a phone before printing it. Anyone scanning it can play in their browser.
 
-The game code and chart data are embedded in index.html. The small configuration
-file remains separate so it can be edited without a build step. GitHub Pages
-serves the game; Supabase stores and ranks shared scores.
+The game screens, wording and interaction code are in game.js. Chart data and
+the scoreboard client are embedded in index.html. Connection settings are in
+scoreboard-config.js. GitHub Pages serves the game; Supabase stores and ranks
+shared scores.
 .nojekyll disables Jekyll processing.
 
 GitHub's publishing instructions:
 https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
-REBUILD AFTER EDITING
-When editing this repository's index.html directly, run:
+EDITING THE GAME
+Edit game.js to change game wording or behaviour. These edits do not require
+updating security hashes. Publish the updated game.js with the website.
+
+When changing inline scripts, embedded chart data or styles in index.html, run:
   python update_csp.py
   python update_csp.py --check
-Run these before committing or publishing, including after wording changes.
+Run these before committing or publishing changes to those inline blocks.
 The page's Content Security Policy verifies its inline scripts and styles;
 outdated hashes cause the browser to block the game from loading.
 
-From the editable endeavour_booth folder, run: python package_app.py
-This refreshes dist, "Endeavour Booth.html", the accompanying scoreboard-config.js,
-"Endeavour Booth.zip" and "Endeavour Scoreboard Setup.zip".
-Edit the source scoreboard-config.js before rebuilding; rebuilding replaces the
-distribution and portable copies with that source version.
+No build step or Python server is required to play the game.
