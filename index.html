@@ -772,7 +772,7 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
     ui.start = element('button', 'game-button game-button-primary game-start', 'Start the 3-round challenge →'); ui.start.type = 'submit';
     append(entry, nameLabel, ui.nickname, nameNote, ui.start);
     ui.poolNote = element('p', 'game-small', '');
-    append(ui.intro, how, ui.poolNote, entry, element('p', 'game-data-note', 'This is a fun challenge - all data discraded afterwards.'));
+    append(ui.intro, how, ui.poolNote, entry, element('p', 'game-data-note', 'This is a fun challenge - only score data is retained.'));
 
     ui.play = element('section', 'game-play'); ui.play.hidden = true;
     const context = element('div', 'game-context');
