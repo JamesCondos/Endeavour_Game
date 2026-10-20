@@ -49,6 +49,13 @@ GitHub's publishing instructions:
 https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 REBUILD AFTER EDITING
+When editing this repository's index.html directly, run:
+  python update_csp.py
+  python update_csp.py --check
+Run these before committing or publishing, including after wording changes.
+The page's Content Security Policy verifies its inline scripts and styles;
+outdated hashes cause the browser to block the game from loading.
+
 From the editable endeavour_booth folder, run: python package_app.py
 This refreshes dist, "Endeavour Booth.html", the accompanying scoreboard-config.js,
 "Endeavour Booth.zip" and "Endeavour Scoreboard Setup.zip".
