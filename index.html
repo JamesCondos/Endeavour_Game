@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-t3WHoK/OwinWT51WRo4sNtWZH63KXChBllvLigYGGYI=' 'sha256-SxeGMzuvTRrXosIupoU86tvvvPzjBMFeo1oGP4j83QE=' 'sha256-98pYFhOvuCjyW0LsyJvrfNkKnnMEAZwR1s4bYd2zY5c=' 'sha256-iqSajLpxicXyhZJ8wfM6WgGAHqa9ZzVOqAdEuZDoEg0='; style-src 'self' 'sha256-8nmZUX6BXEMZpYL7hE1QfUGW9DXg4SAwPVEGSKx5vIg=' 'sha256-qfu9pCizfsrY7aCafInTNtNHjGattdVJN7A9ajl3Cko='; connect-src 'self' https://*.supabase.co; base-uri 'none'; object-src 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-t3WHoK/OwinWT51WRo4sNtWZH63KXChBllvLigYGGYI=' 'sha256-SxeGMzuvTRrXosIupoU86tvvvPzjBMFeo1oGP4j83QE=' 'sha256-D8n+MzAOMtq14BLikblv9UW8JA1t3wisIQGRC8vxhRo=' 'sha256-iqSajLpxicXyhZJ8wfM6WgGAHqa9ZzVOqAdEuZDoEg0='; style-src 'self' 'sha256-8nmZUX6BXEMZpYL7hE1QfUGW9DXg4SAwPVEGSKx5vIg=' 'sha256-pD/1IZ2wmrVThVciXAk/WKJ0a5IxvvV1pAVhMH6n9uE='; connect-src 'self' https://*.supabase.co; base-uri 'none'; object-src 'none'; form-action 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#003f8b">
   <meta name="description" content="Can you beat the AI? Make three mobile-network throughput predictions and see how your guesses compare.">
@@ -42,8 +42,8 @@ button { touch-action: manipulation; }
 .game-context{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:15px}.game-round{font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:#eaf2fa;color:var(--game-blue);font-weight:bold;border-radius:6px;padding:8px 11px}.game-site{font-size:13px;color:var(--game-muted);flex:1}.game-question{font-size:30px;margin:4px 0 7px;line-height:1.2}.game-last{font-size:14px;color:var(--game-muted);margin:0 0 8px}.game-last strong{color:var(--game-ink)}
 .game-chart{width:100%;background:#fff;overflow:hidden;border-radius:8px}.game-chart svg{width:100%;height:auto;display:block;touch-action:manipulation}.game-svg-axis{font:14px Arial,sans-serif;fill:#597086}.game-svg-unit{font:700 13px Arial,sans-serif;fill:#183454}.game-svg-label{font:700 10px Arial,sans-serif;fill:#597086;letter-spacing:.06em}.game-svg-guess{font:700 14px Arial,sans-serif;fill:#a34b20}.game-svg-future{font-weight:bold;fill:#003f8b}.game-chart-legend{font-size:12px;color:var(--game-muted);text-align:center;margin:2px 0 0;line-height:1.5}.game-axis-note{font-size:12px;color:var(--game-muted);text-align:center;min-height:17px;margin:3px 0 10px}
 .game-guess-form{display:grid;grid-template-columns:minmax(250px,420px) auto;gap:12px 22px;align-items:center;padding:18px 22px;background:#f4f8fb;border:1px solid #e1eaf1;border-radius:13px}.game-guess-area{min-width:0}.game-input-label{display:block;font-weight:700;font-size:13px;margin-bottom:8px}.game-input-wrap{display:flex;align-items:center;border:1px solid #bbccd9;border-radius:9px;background:#fff;overflow:hidden}.game-number{width:100%;min-width:0;background:transparent;border:0;padding:12px 14px;color:var(--game-ink);font:700 23px Arial,sans-serif;line-height:1.2}.game-input-unit{padding-right:15px;font-size:14px;color:var(--game-muted)}.game-slider{width:100%;height:22px;margin:12px 0 0;accent-color:var(--game-orange);cursor:pointer}.game-guess-form>.game-button{justify-self:end;min-width:220px}.game-error{grid-column:1/-1;color:#a42d30;font-size:13px;margin:0}.game-error:empty{display:none}.game-number:disabled{opacity:.75}.game-slider:disabled{cursor:default;opacity:.5}
-.game-reveal{border-top:1px solid #dce6ef;margin-top:20px;padding-top:22px}.game-reveal h3{font-size:28px;margin:0 0 6px}.game-actual{color:var(--game-teal);font-size:18px;margin:0 0 16px}.game-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.game-score-card{background:#f5f8fb;border:1px solid #e1e9f0;border-radius:12px;padding:17px 18px;min-width:0}.game-score-label{display:block;font-size:12px;color:var(--game-muted);font-weight:700;margin-bottom:8px}.game-score-value{display:block;overflow-wrap:anywhere;font-size:clamp(19px,2.2vw,28px);white-space:nowrap;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.game-score-error{display:block;color:var(--game-muted);font-size:13px;margin-top:6px}.game-human{color:var(--game-orange)}.game-ai{color:var(--game-blue)}.game-next{display:flex;margin:20px 0 0 auto;min-width:210px}
-.game-finish-title{font-size:38px;margin:0 0 22px;line-height:1.15}.game-final-scores{margin-bottom:16px}.game-final-scores .game-score-card{padding:22px}.game-details{margin:18px 0;border-top:1px solid #e1e9f0;border-bottom:1px solid #e1e9f0;padding:16px 0}.game-details summary,.game-leaderboard summary{font-size:14px;font-weight:bold;cursor:pointer;line-height:1.4}.game-table-wrap{overflow:auto}.game-table{width:100%;border-collapse:collapse;text-align:left;font-size:14px;margin:15px 0;font-variant-numeric:tabular-nums}.game-table th{font-size:12px;color:var(--game-muted);font-weight:700}.game-table th,.game-table td{padding:12px 14px;border-bottom:1px solid #e3ebf1}.game-table tr:last-child td{border-bottom:0}.game-table th:first-child,.game-table td:first-child{padding-left:0}.game-table th:last-child,.game-table td:last-child{text-align:right;padding-right:0}
+.game-reveal{border-top:1px solid #dce6ef;margin-top:20px;padding-top:22px}.game-reveal h3{font-size:28px;margin:0 0 6px}.game-actual{color:var(--game-teal)}.game-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.game-score-card{background:#f5f8fb;border:1px solid #e1e9f0;border-radius:12px;padding:17px 18px;min-width:0}.game-score-label{display:block;font-size:12px;color:var(--game-muted);font-weight:700;margin-bottom:8px}.game-score-value{display:block;overflow-wrap:anywhere;font-size:clamp(19px,2.2vw,28px);white-space:nowrap;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.game-score-error{display:block;color:var(--game-muted);font-size:13px;margin-top:6px}.game-human{color:var(--game-orange)}.game-ai{color:var(--game-blue)}.game-next{display:flex;margin:20px 0 0 auto;min-width:210px}
+.game-finish-title{font-size:38px;margin:0 0 22px;line-height:1.15}.game-final-scores{grid-template-columns:repeat(2,1fr);margin-bottom:16px}.game-final-scores .game-score-card{padding:22px}.game-details{margin:18px 0;border-top:1px solid #e1e9f0;border-bottom:1px solid #e1e9f0;padding:16px 0}.game-details summary,.game-leaderboard summary{font-size:14px;font-weight:bold;cursor:pointer;line-height:1.4}.game-table-wrap{overflow:auto}.game-table{width:100%;border-collapse:collapse;text-align:left;font-size:14px;margin:15px 0;font-variant-numeric:tabular-nums}.game-table th{font-size:12px;color:var(--game-muted);font-weight:700}.game-table th,.game-table td{padding:12px 14px;border-bottom:1px solid #e3ebf1}.game-table tr:last-child td{border-bottom:0}.game-table th:first-child,.game-table td:first-child{padding-left:0}.game-table th:last-child,.game-table td:last-child{text-align:right;padding-right:0}
 .game-save-form{display:grid;grid-template-columns:minmax(200px,360px) auto;justify-content:start;gap:10px 12px;margin:25px 0}.game-save-form .game-input-label{grid-column:1/-1;margin:0}.game-nickname{min-height:48px;border:1px solid #bbccd9;border-radius:9px;padding:11px 13px;font:16px Arial,sans-serif;color:var(--game-ink);width:100%;min-width:0}.game-save-form .game-small{grid-column:1/-1;min-height:20px;margin:0}.game-leaderboard{margin:22px 0 0;padding:20px 24px;background:#fff;border:1px solid #dbe5ed;border-radius:14px}.game-leaderboard summary{font-size:15px}.game-leaderboard .game-small{max-width:860px}.game-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 @media(min-width:1400px){.game-root{padding-top:30px}.game-chart svg{max-height:400px}.game-intro-panel{padding:34px 38px}}
 @media(max-width:760px){.game-root{padding:18px 16px 36px}.game-header{margin-bottom:20px}.game-intro-text{font-size:16px}.game-intro-panel,.game-play,.game-finish{padding:21px 18px;border-radius:14px}.game-how{gap:20px;grid-template-columns:1fr;margin-bottom:24px}.game-how-item{display:grid;grid-template-columns:40px 1fr;gap:0 14px}.game-how-item .game-step{grid-row:1/3}.game-how h3{font-size:21px;margin:0 0 5px}.game-how p{font-size:14px}.game-horizon-options{gap:8px}.game-choice{flex:1;min-width:60px;padding:10px}.game-context{gap:9px}.game-site{order:3;flex-basis:100%;font-size:12px}.game-context .game-button{margin-left:auto}.game-question{font-size:26px}.game-guess-form{grid-template-columns:1fr;padding:16px;gap:16px}.game-guess-form>.game-button{width:100%;justify-self:stretch}.game-chart{margin-left:-7px;width:calc(100% + 14px)}.game-chart-legend{font-size:11px}.game-scores{gap:8px}.game-score-card,.game-final-scores .game-score-card{padding:13px 10px}.game-score-label{font-size:11px;min-height:28px}.game-score-value{font-size:18px}.game-score-error{font-size:11px}.game-reveal h3{font-size:25px}.game-finish-title{font-size:30px}.game-save-form{grid-template-columns:1fr}.game-save-form .game-button{width:100%}.game-next{width:100%}.game-leaderboard{padding:17px}.game-table{font-size:12px}.game-table th,.game-table td{padding:10px 8px}.game-start{font-size:16px;width:100%}}
@@ -65,7 +65,7 @@ button { touch-action: manipulation; }
 
 /* Keep the comparison readable on phones, including large predictions. */
 @media(max-width:600px){
-  .game-scores{grid-template-columns:1fr}
+  .game-scores,.game-final-scores{grid-template-columns:1fr}
   .game-score-card,.game-final-scores .game-score-card{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:13px 14px}
   .game-score-label{min-height:0;margin:0;font-size:12px}
   .game-score-value{font-size:20px}
@@ -553,8 +553,7 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
       ui.guess.focus(); return;
     }
     const actual = number(target.actual), prediction = number(target.prediction);
-    const persistence = finite(number(target.persistence)) ? number(target.persistence) : number(current.history[current.history.length - 1].value);
-    const record = { caseId: current.id, guess, actual, prediction, persistence, humanError: Math.abs(guess - actual), aiError: Math.abs(prediction - actual), persistenceError: Math.abs(persistence - actual) };
+    const record = { caseId: current.id, guess, actual, prediction, humanError: Math.abs(guess - actual), aiError: Math.abs(prediction - actual) };
     rounds.push(record); phase = 'revealed';
     if (rounds.length === ROUND_COUNT) saveScore();
     ui.guess.disabled = true; ui.slider.disabled = true; ui.lock.disabled = true;
@@ -566,8 +565,7 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
     ui.actual.textContent = `${money(actual)} Mbps`;
     ui.humanValue.textContent = `${money(guess)} Mbps`; ui.humanError.textContent = `${money(record.humanError)} Mbps error`;
     ui.aiValue.textContent = `${money(prediction)} Mbps`; ui.aiError.textContent = `${money(record.aiError)} Mbps error`;
-    ui.baselineValue.textContent = `${money(persistence)} Mbps`; ui.baselineError.textContent = `${money(record.persistenceError)} Mbps error`;
-    ui.explanation.textContent = 'Error is the distance from the recorded outcome. The “last value” baseline simply repeats the latest measurement.';
+    ui.explanation.textContent = 'Error is the distance between a prediction and the actual value.';
     renderChart(true);
     announce(`${ui.revealTitle.textContent} Recorded outcome ${money(actual)} Mbps. Your error ${money(record.humanError)} Mbps. AI error ${money(record.aiError)} Mbps.`);
     ui.revealTitle.focus();
@@ -579,16 +577,15 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
   }
   function finish() {
     phase = 'finished'; setHidden(ui.play, true); setHidden(ui.finish, false);
-    const human = mean(rounds.map(row => row.humanError)), ai = mean(rounds.map(row => row.aiError)), baseline = mean(rounds.map(row => row.persistenceError));
+    const human = mean(rounds.map(row => row.humanError)), ai = mean(rounds.map(row => row.aiError));
     ui.finishTitle.textContent = Math.abs(human - ai) < 0.005 ? 'A draw. Nicely predicted!' : human < ai ? 'You beat the AI this time!' : 'The AI takes this challenge.';
     ui.finalHuman.textContent = `${money(human)} Mbps`;
     ui.finalAi.textContent = `${money(ai)} Mbps`;
-    ui.finalBaseline.textContent = `${money(baseline)} Mbps`;
     ui.finishDetail.textContent = `Mean absolute error across your three ${horizon}-minute forecasts. This short game is a demonstration; it is not an overall model evaluation.`;
     ui.roundTable.replaceChildren();
     rounds.forEach((row, index) => {
       const tr = element('tr');
-      [String(index + 1), money(row.humanError), money(row.aiError), money(row.persistenceError)].forEach(value => tr.appendChild(element('td', '', value)));
+      [String(index + 1), money(row.humanError), money(row.aiError)].forEach(value => tr.appendChild(element('td', '', value)));
       ui.roundTable.appendChild(tr);
     });
     refreshLeaderboard();
@@ -771,7 +768,7 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
     append(header, title, element('p', 'game-intro-text', 'Predict what comes next in a mobile network. Three rounds. You versus the AI.'));
     ui.intro = element('section', 'game-intro-panel');
     const how = element('div', 'game-how');
-    [['01', 'Read the history', 'See six hours of recorded mobile-network throughput.'], ['02', 'Make your guess', 'Predict the throughput in Mbps at a future time.'], ['03', 'Meet your opponent', 'Reveal your error alongside the AI and a simple baseline.']].forEach(([n, title, description]) => {
+    [['01', 'Read the history', 'See six hours of recorded mobile-network throughput.'], ['02', 'Make your guess', 'Predict the throughput in Mbps at a future time.'], ['03', 'Meet your opponent', 'Compare your guess and the AI forecast with the actual value.']].forEach(([n, title, description]) => {
       const item = element('div', 'game-how-item'); append(item, element('span', 'game-step', n), element('h3', '', title), element('p', '', description)); append(how, item);
     });
     const entry = element('form', 'game-entry');
@@ -807,12 +804,12 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
     append(form, guessArea, ui.lock, ui.guessError);
     ui.progress = element('p', 'game-small', '');
     ui.reveal = element('div', 'game-reveal'); ui.reveal.hidden = true;
-    ui.revealTitle = element('h3', '', ''); ui.revealTitle.tabIndex = -1; const actual = element('p', 'game-actual', 'Recorded outcome: '); ui.actual = element('strong', '', ''); append(actual, ui.actual);
+    ui.revealTitle = element('h3', '', ''); ui.revealTitle.tabIndex = -1;
     const scores = element('div', 'game-scores');
     const human = card('Your guess', 'game-score-value game-human', 'game-score-error'); ui.humanValue = human.value; ui.humanError = human.error;
     const ai = card('AI forecast', 'game-score-value game-ai', 'game-score-error'); ui.aiValue = ai.value; ui.aiError = ai.error;
-    const baseline = card('Last-value baseline', 'game-score-value', 'game-score-error'); ui.baselineValue = baseline.value; ui.baselineError = baseline.error;
-    append(scores, human.box, ai.box, baseline.box); ui.explanation = element('p', 'game-small', ''); append(ui.reveal, ui.revealTitle, actual, scores, ui.explanation);
+    const actual = card('Actual value', 'game-score-value game-actual'); ui.actual = actual.value;
+    append(scores, human.box, ai.box, actual.box); ui.explanation = element('p', 'game-small', ''); append(ui.reveal, ui.revealTitle, scores, ui.explanation);
     ui.next = element('button', 'game-button game-button-primary game-next', 'Next round →'); ui.next.type = 'button'; ui.next.hidden = true; ui.next.addEventListener('click', nextRound);
     append(ui.play, context, ui.question, last, ui.chart, ui.chartLegend, ui.axisNote, form, ui.progress, ui.reveal, ui.next);
 
@@ -821,12 +818,11 @@ window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorde
     const finalScores = element('div', 'game-scores game-final-scores');
     const finalHuman = card('Your average error', 'game-score-value game-human'); ui.finalHuman = finalHuman.value;
     const finalAi = card('AI average error', 'game-score-value game-ai'); ui.finalAi = finalAi.value;
-    const finalBaseline = card('Last-value average error', 'game-score-value'); ui.finalBaseline = finalBaseline.value;
-    append(finalScores, finalHuman.box, finalAi.box, finalBaseline.box);
+    append(finalScores, finalHuman.box, finalAi.box);
     ui.finishDetail = element('p', 'game-small', '');
     const detail = element('details', 'game-details'); append(detail, element('summary', '', 'See each round’s absolute error'));
     const tableWrap = element('div', 'game-table-wrap'), table = element('table', 'game-table');
-    const head = element('thead'), headerRow = element('tr'); ['Round', 'You (Mbps)', 'AI (Mbps)', 'Last value (Mbps)'].forEach(text => append(headerRow, element('th', '', text))); append(head, headerRow); ui.roundTable = element('tbody'); append(table, head, ui.roundTable); append(tableWrap, table); append(detail, tableWrap);
+    const head = element('thead'), headerRow = element('tr'); ['Round', 'You (Mbps)', 'AI (Mbps)'].forEach(text => append(headerRow, element('th', '', text))); append(head, headerRow); ui.roundTable = element('tbody'); append(table, head, ui.roundTable); append(tableWrap, table); append(detail, tableWrap);
     const saveArea = element('div', 'game-save-area');
     ui.save = element('button', 'game-button game-button-secondary', 'Retry saving score'); ui.save.type = 'button'; ui.save.hidden = true; ui.save.addEventListener('click', saveScore);
     ui.saveStatus = element('p', 'game-small', ''); ui.saveStatus.setAttribute('role', 'status'); append(saveArea, ui.saveStatus, ui.save);
