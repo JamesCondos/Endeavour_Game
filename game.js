@@ -319,7 +319,7 @@
     append(header, title, element('p', 'game-intro-text', 'Predict what comes next in a mobile network. Three rounds. You versus the AI.'));
     ui.intro = element('section', 'game-intro-panel');
     const how = element('div', 'game-how');
-    [['01', 'Read the history', 'See six hours of recorded mobile-network throughput.'], ['02', 'Make your guess', 'Predict the throughput in Mbps at a future time.'], ['03', 'Meet your opponent', 'Compare your guess and the AI forecast with the actual value.']].forEach(([n, title, description]) => {
+    [['01', 'Read the history', 'See six hours of mobile-network throughput.'], ['02', 'Make your guess', 'Predict the throughput in Mbps at a future time.'], ['03', 'Meet your opponent', 'Compare your guess and the AI forecast with the actual value.']].forEach(([n, title, description]) => {
       const item = element('div', 'game-how-item'); append(item, element('span', 'game-step', n), element('h3', '', title), element('p', '', description)); append(how, item);
     });
     const entry = element('form', 'game-entry');
