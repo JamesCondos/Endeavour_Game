@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-t3WHoK/OwinWT51WRo4sNtWZH63KXChBllvLigYGGYI=' 'sha256-SxeGMzuvTRrXosIupoU86tvvvPzjBMFeo1oGP4j83QE=' 'sha256-98pYFhOvuCjyW0LsyJvrfNkKnnMEAZwR1s4bYd2zY5c=' 'sha256-iqSajLpxicXyhZJ8wfM6WgGAHqa9ZzVOqAdEuZDoEg0='; style-src 'self' 'sha256-8nmZUX6BXEMZpYL7hE1QfUGW9DXg4SAwPVEGSKx5vIg=' 'sha256-qfu9pCizfsrY7aCafInTNtNHjGattdVJN7A9ajl3Cko='; connect-src 'self' https://*.supabase.co; base-uri 'none'; object-src 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#003f8b">
+  <meta name="description" content="Can you beat the AI? Make three mobile-network throughput predictions and see how your guesses compare.">
+  <title>Can you beat the AI?</title>
+  <style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #f5f8fb;
+  color: #183454;
+  font: 16px Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+[hidden] { display: none !important; }
+button, input { font: inherit; }
+button { touch-action: manipulation; }
+.app-error {
+  max-width: 600px;
+  margin: 48px auto;
+  padding: 24px;
+  line-height: 1.5;
+}
+
+</style>
+  <style>
+.game-root{--game-ink:#183454;--game-blue:#003f8b;--game-teal:#087e83;--game-orange:#c66a3b;--game-muted:#597086;color:var(--game-ink);font-family:Arial,sans-serif;max-width:1240px;margin:0 auto;padding:24px 32px 48px}
+.game-root{scroll-margin-top:16px}.game-root.game-session{padding-top:16px}.game-session .game-header{margin-bottom:16px}.game-session .game-header .game-title{font-size:34px;margin:0}.game-session .game-header .game-eyebrow,.game-session .game-header .game-intro-text{display:none}.game-session .game-play{padding-top:20px;padding-bottom:20px}.game-session .game-chart svg{max-height:300px}.game-session .game-context{margin-bottom:8px}.game-session .game-question{font-size:27px}.game-session .game-guess-form{padding:13px 18px}.game-session .game-axis-note:empty{min-height:0;margin-bottom:12px}
+.game-root *{box-sizing:border-box}.game-root [hidden]{display:none!important}
+.game-root h1,.game-root h2,.game-root h3{font-family:"Bell MT",Georgia,serif}.game-root p{line-height:1.5}
+.game-header{max-width:920px;margin-bottom:28px}.game-eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--game-teal);margin:0 0 9px}.game-title{font-size:clamp(34px,4vw,56px);line-height:1.08;margin:0 0 12px;letter-spacing:-.025em}.game-intro-text{font-size:19px;color:var(--game-muted);margin:0;max-width:810px}
+.game-intro-panel,.game-play,.game-finish{background:#fff;border:1px solid #dbe5ed;border-radius:20px;padding:28px 32px;box-shadow:0 9px 32px #18345407}
+.game-how{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-bottom:28px}.game-how-item{padding-right:18px}.game-step{display:inline-flex;width:38px;height:38px;border-radius:11px;align-items:center;justify-content:center;font-size:13px;font-weight:bold;color:var(--game-blue);background:#eaf2fa}.game-how h3{font-size:24px;margin:15px 0 7px}.game-how p{font-size:15px;color:var(--game-muted);margin:0}
+.game-horizons{padding:0;margin:0 0 23px;border:0}.game-horizons legend{font-size:14px;font-weight:700;margin-bottom:11px}.game-horizon-options{display:flex;gap:10px;flex-wrap:wrap}.game-choice{min-width:98px;min-height:48px;padding:10px 19px;border:1px solid #c5d5e1;border-radius:10px;background:white;color:var(--game-ink);font:700 16px Arial,sans-serif;cursor:pointer}.game-choice[aria-pressed=true]{color:white;background:var(--game-blue);border-color:var(--game-blue);box-shadow:0 3px 9px #003f8b20}.game-choice:hover{border-color:var(--game-blue)}
+.game-button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;gap:8px;padding:13px 22px;border-radius:10px;border:1px solid transparent;font:700 16px Arial,sans-serif;cursor:pointer;text-decoration:none;line-height:1.25;transition:background .15s,border-color .15s,transform .15s}.game-button:hover:not(:disabled){transform:translateY(-1px)}.game-button-primary{color:white;background:var(--game-blue);box-shadow:0 4px 10px #003f8b16}.game-button-primary:hover:not(:disabled){background:#073372}.game-button-secondary{background:#eaf2fa;color:var(--game-blue);border-color:#c5d5e1}.game-button-quiet{color:var(--game-muted);background:transparent;font-size:13px;padding:10px 13px}.game-button-quiet:hover:not(:disabled){background:#edf3f8;color:var(--game-blue)}.game-button:disabled{opacity:.5;cursor:default;transform:none}.game-start{font-size:18px;padding:16px 25px}.game-root :focus-visible{outline:3px solid #13a2c5;outline-offset:4px}
+.game-small{font-size:13px;color:var(--game-muted);line-height:1.5;margin:13px 0}.game-data-note{border-top:1px solid #e5ebf1;padding-top:16px;margin:20px 0 0;color:var(--game-muted);font-size:12px}
+.game-context{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:15px}.game-round{font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:#eaf2fa;color:var(--game-blue);font-weight:bold;border-radius:6px;padding:8px 11px}.game-site{font-size:13px;color:var(--game-muted);flex:1}.game-question{font-size:30px;margin:4px 0 7px;line-height:1.2}.game-last{font-size:14px;color:var(--game-muted);margin:0 0 8px}.game-last strong{color:var(--game-ink)}
+.game-chart{width:100%;background:#fff;overflow:hidden;border-radius:8px}.game-chart svg{width:100%;height:auto;display:block;touch-action:manipulation}.game-svg-axis{font:14px Arial,sans-serif;fill:#597086}.game-svg-unit{font:700 13px Arial,sans-serif;fill:#183454}.game-svg-label{font:700 10px Arial,sans-serif;fill:#597086;letter-spacing:.06em}.game-svg-guess{font:700 14px Arial,sans-serif;fill:#a34b20}.game-svg-future{font-weight:bold;fill:#003f8b}.game-chart-legend{font-size:12px;color:var(--game-muted);text-align:center;margin:2px 0 0;line-height:1.5}.game-axis-note{font-size:12px;color:var(--game-muted);text-align:center;min-height:17px;margin:3px 0 10px}
+.game-guess-form{display:grid;grid-template-columns:minmax(250px,420px) auto;gap:12px 22px;align-items:center;padding:18px 22px;background:#f4f8fb;border:1px solid #e1eaf1;border-radius:13px}.game-guess-area{min-width:0}.game-input-label{display:block;font-weight:700;font-size:13px;margin-bottom:8px}.game-input-wrap{display:flex;align-items:center;border:1px solid #bbccd9;border-radius:9px;background:#fff;overflow:hidden}.game-number{width:100%;min-width:0;background:transparent;border:0;padding:12px 14px;color:var(--game-ink);font:700 23px Arial,sans-serif;line-height:1.2}.game-input-unit{padding-right:15px;font-size:14px;color:var(--game-muted)}.game-slider{width:100%;height:22px;margin:12px 0 0;accent-color:var(--game-orange);cursor:pointer}.game-guess-form>.game-button{justify-self:end;min-width:220px}.game-error{grid-column:1/-1;color:#a42d30;font-size:13px;margin:0}.game-error:empty{display:none}.game-number:disabled{opacity:.75}.game-slider:disabled{cursor:default;opacity:.5}
+.game-reveal{border-top:1px solid #dce6ef;margin-top:20px;padding-top:22px}.game-reveal h3{font-size:28px;margin:0 0 6px}.game-actual{color:var(--game-teal);font-size:18px;margin:0 0 16px}.game-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.game-score-card{background:#f5f8fb;border:1px solid #e1e9f0;border-radius:12px;padding:17px 18px;min-width:0}.game-score-label{display:block;font-size:12px;color:var(--game-muted);font-weight:700;margin-bottom:8px}.game-score-value{display:block;overflow-wrap:anywhere;font-size:clamp(19px,2.2vw,28px);white-space:nowrap;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.game-score-error{display:block;color:var(--game-muted);font-size:13px;margin-top:6px}.game-human{color:var(--game-orange)}.game-ai{color:var(--game-blue)}.game-next{display:flex;margin:20px 0 0 auto;min-width:210px}
+.game-finish-title{font-size:38px;margin:0 0 22px;line-height:1.15}.game-final-scores{margin-bottom:16px}.game-final-scores .game-score-card{padding:22px}.game-details{margin:18px 0;border-top:1px solid #e1e9f0;border-bottom:1px solid #e1e9f0;padding:16px 0}.game-details summary,.game-leaderboard summary{font-size:14px;font-weight:bold;cursor:pointer;line-height:1.4}.game-table-wrap{overflow:auto}.game-table{width:100%;border-collapse:collapse;text-align:left;font-size:14px;margin:15px 0;font-variant-numeric:tabular-nums}.game-table th{font-size:12px;color:var(--game-muted);font-weight:700}.game-table th,.game-table td{padding:12px 14px;border-bottom:1px solid #e3ebf1}.game-table tr:last-child td{border-bottom:0}.game-table th:first-child,.game-table td:first-child{padding-left:0}.game-table th:last-child,.game-table td:last-child{text-align:right;padding-right:0}
+.game-save-form{display:grid;grid-template-columns:minmax(200px,360px) auto;justify-content:start;gap:10px 12px;margin:25px 0}.game-save-form .game-input-label{grid-column:1/-1;margin:0}.game-nickname{min-height:48px;border:1px solid #bbccd9;border-radius:9px;padding:11px 13px;font:16px Arial,sans-serif;color:var(--game-ink);width:100%;min-width:0}.game-save-form .game-small{grid-column:1/-1;min-height:20px;margin:0}.game-leaderboard{margin:22px 0 0;padding:20px 24px;background:#fff;border:1px solid #dbe5ed;border-radius:14px}.game-leaderboard summary{font-size:15px}.game-leaderboard .game-small{max-width:860px}.game-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(min-width:1400px){.game-root{padding-top:30px}.game-chart svg{max-height:400px}.game-intro-panel{padding:34px 38px}}
+@media(max-width:760px){.game-root{padding:18px 16px 36px}.game-header{margin-bottom:20px}.game-intro-text{font-size:16px}.game-intro-panel,.game-play,.game-finish{padding:21px 18px;border-radius:14px}.game-how{gap:20px;grid-template-columns:1fr;margin-bottom:24px}.game-how-item{display:grid;grid-template-columns:40px 1fr;gap:0 14px}.game-how-item .game-step{grid-row:1/3}.game-how h3{font-size:21px;margin:0 0 5px}.game-how p{font-size:14px}.game-horizon-options{gap:8px}.game-choice{flex:1;min-width:60px;padding:10px}.game-context{gap:9px}.game-site{order:3;flex-basis:100%;font-size:12px}.game-context .game-button{margin-left:auto}.game-question{font-size:26px}.game-guess-form{grid-template-columns:1fr;padding:16px;gap:16px}.game-guess-form>.game-button{width:100%;justify-self:stretch}.game-chart{margin-left:-7px;width:calc(100% + 14px)}.game-chart-legend{font-size:11px}.game-scores{gap:8px}.game-score-card,.game-final-scores .game-score-card{padding:13px 10px}.game-score-label{font-size:11px;min-height:28px}.game-score-value{font-size:18px}.game-score-error{font-size:11px}.game-reveal h3{font-size:25px}.game-finish-title{font-size:30px}.game-save-form{grid-template-columns:1fr}.game-save-form .game-button{width:100%}.game-next{width:100%}.game-leaderboard{padding:17px}.game-table{font-size:12px}.game-table th,.game-table td{padding:10px 8px}.game-start{font-size:16px;width:100%}}
+@media(prefers-reduced-motion:reduce){.game-button{transition:none}.game-button:hover:not(:disabled){transform:none}}
+
+.game-entry{max-width:500px;margin-top:24px}
+.game-entry .game-nickname{max-width:360px}
+.game-entry .game-small{margin:9px 0 18px}
+.game-entry .game-start{max-width:100%}
+.game-save-area{margin:20px 0 24px}
+.game-leader-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.game-leader-header h2{font-size:28px;margin:0}
+.game-board-meta{font-weight:700;color:var(--game-ink)}
+.game-board-status{margin-bottom:0}
+.game-leaderboard .game-table{table-layout:fixed}
+.game-leaderboard .game-table th:first-child{width:14%}
+.game-leaderboard .game-table th:last-child{width:36%}
+.game-leaderboard .game-table td{overflow-wrap:anywhere}
+
+/* Keep the comparison readable on phones, including large predictions. */
+@media(max-width:600px){
+  .game-scores{grid-template-columns:1fr}
+  .game-score-card,.game-final-scores .game-score-card{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:13px 14px}
+  .game-score-label{min-height:0;margin:0;font-size:12px}
+  .game-score-value{font-size:20px}
+  .game-score-error{grid-column:1/-1;text-align:right;font-size:12px}
+  .game-svg-axis{font-size:12px}
+  .game-slider{height:32px}
+  .game-guess-form>.game-button{min-width:0}
+}
+
+</style>
+</head>
+<body>
+  <main id="game-view" aria-labelledby="game-title"></main>
+  <p id="app-error" class="app-error" role="alert" hidden></p>
+  <noscript><p class="app-error">Enable JavaScript in your browser to play the forecasting game.</p></noscript>
+  <script>
+window.BOOTH_GAME_DATA = {"meta":{"title":"Can you beat the AI?","kind":"recorded-holdout-replay","units":"Mbps","target":"Site-level average downlink throughput proxy, weighted by downlink-session counts across sectors (unweighted fallback when no positive session weight).","siteCount":32,"caseCount":32,"historyPoints":24,"intervalMinutes":15,"horizonsMinutes":[15,30,45,60],"model":"Qwen2.5-3B numeric LoRA","modelInputs":["Downlink throughput","Connected users","Downlink data volume","Uplink data volume","Time of day and day of week"],"visitorInputs":"The throughput history is displayed. The AI additionally received three other network measurements and calendar features.","testStart":"2026-04-05T15:30:00","selection":"Seed 2026; four windows in each of eight strata based only on historical throughput level (quartiles) and variability (lower/higher halves); 32 distinct sites. No selection based on future outcomes or model errors.","selectionSeed":2026,"fullHoldout":{"windows":2384,"sites":149,"qwenMaeMbps":4.421614,"persistenceMaeMbps":4.881252},"timestampNote":"Timestamps are retained as recorded; the source contains no timezone. These are recorded observations, not a live network feed.","siteNote":"Sites are anonymised. Booth Site numbers follow alphabetical source-site order across all 168 prepared sites; they are not geographic positions.","baseline":"Persistence repeats the latest observed throughput at all four forecast horizons.","gameNote":"A demonstration subset, not a new model evaluation. Compare guesses using absolute error in Mbps; average these errors for a multi-round MAE.","sourceFiles":["LLM predictions/outputs/numeric_evaluation/holdout_predictions.csv","LLM predictions/outputs/site_15min.parquet","LLM predictions/outputs/qwen_numeric_site_lora_adapter/forecast_metadata.json"]},"cases":[{"id":"forecast-01","site":"Booth Site042","origin":"2026-04-09T19:45:00","history":[{"time":"2026-04-09T14:00:00","value":11.980957},{"time":"2026-04-09T14:15:00","value":12.110774},{"time":"2026-04-09T14:30:00","value":11.699249},{"time":"2026-04-09T14:45:00","value":11.849647},{"time":"2026-04-09T15:00:00","value":8.365187},{"time":"2026-04-09T15:15:00","value":9.607988},{"time":"2026-04-09T15:30:00","value":10.182287},{"time":"2026-04-09T15:45:00","value":11.100656},{"time":"2026-04-09T16:00:00","value":9.691032},{"time":"2026-04-09T16:15:00","value":11.221395},{"time":"2026-04-09T16:30:00","value":9.730362},{"time":"2026-04-09T16:45:00","value":11.217283},{"time":"2026-04-09T17:00:00","value":12.573616},{"time":"2026-04-09T17:15:00","value":13.219024},{"time":"2026-04-09T17:30:00","value":12.182385},{"time":"2026-04-09T17:45:00","value":10.732551},{"time":"2026-04-09T18:00:00","value":11.90099},{"time":"2026-04-09T18:15:00","value":14.281211},{"time":"2026-04-09T18:30:00","value":16.564117},{"time":"2026-04-09T18:45:00","value":15.512948},{"time":"2026-04-09T19:00:00","value":16.463128},{"time":"2026-04-09T19:15:00","value":16.660663},{"time":"2026-04-09T19:30:00","value":20.04424},{"time":"2026-04-09T19:45:00","value":17.850231}],"targets":[{"minutes":15,"time":"2026-04-09T20:00:00","actual":15.624577,"prediction":18.66752,"persistence":17.85023,"recentMean":17.754566},{"minutes":30,"time":"2026-04-09T20:15:00","actual":16.134771,"prediction":18.589578,"persistence":17.85023,"recentMean":17.754566},{"minutes":45,"time":"2026-04-09T20:30:00","actual":14.912767,"prediction":18.526092,"persistence":17.85023,"recentMean":17.754566},{"minutes":60,"time":"2026-04-09T20:45:00","actual":16.344105,"prediction":18.630025,"persistence":17.85023,"recentMean":17.754566}]},{"id":"forecast-02","site":"Booth Site022","origin":"2026-04-14T13:45:00","history":[{"time":"2026-04-14T08:00:00","value":25.528382},{"time":"2026-04-14T08:15:00","value":26.477028},{"time":"2026-04-14T08:30:00","value":33.244374},{"time":"2026-04-14T08:45:00","value":29.152238},{"time":"2026-04-14T09:00:00","value":31.561545},{"time":"2026-04-14T09:15:00","value":27.537725},{"time":"2026-04-14T09:30:00","value":30.555018},{"time":"2026-04-14T09:45:00","value":32.271302},{"time":"2026-04-14T10:00:00","value":31.551531},{"time":"2026-04-14T10:15:00","value":32.432662},{"time":"2026-04-14T10:30:00","value":33.092112},{"time":"2026-04-14T10:45:00","value":28.550241},{"time":"2026-04-14T11:00:00","value":29.151934},{"time":"2026-04-14T11:15:00","value":31.317918},{"time":"2026-04-14T11:30:00","value":30.807615},{"time":"2026-04-14T11:45:00","value":30.226209},{"time":"2026-04-14T12:00:00","value":31.375829},{"time":"2026-04-14T12:15:00","value":29.42165},{"time":"2026-04-14T12:30:00","value":31.5828},{"time":"2026-04-14T12:45:00","value":31.330699},{"time":"2026-04-14T13:00:00","value":30.283516},{"time":"2026-04-14T13:15:00","value":31.18875},{"time":"2026-04-14T13:30:00","value":31.769773},{"time":"2026-04-14T13:45:00","value":26.370014}],"targets":[{"minutes":15,"time":"2026-04-14T14:00:00","actual":31.504014,"prediction":27.273236,"persistence":26.370014,"recentMean":29.903014},{"minutes":30,"time":"2026-04-14T14:15:00","actual":32.303459,"prediction":27.369518,"persistence":26.370014,"recentMean":29.903014},{"minutes":45,"time":"2026-04-14T14:30:00","actual":30.596902,"prediction":27.183477,"persistence":26.370014,"recentMean":29.903014},{"minutes":60,"time":"2026-04-14T14:45:00","actual":28.002799,"prediction":27.396504,"persistence":26.370014,"recentMean":29.903014}]},{"id":"forecast-03","site":"Booth Site023","origin":"2026-04-09T14:45:00","history":[{"time":"2026-04-09T09:00:00","value":60.83333},{"time":"2026-04-09T09:15:00","value":85.0},{"time":"2026-04-09T09:30:00","value":46.66667},{"time":"2026-04-09T09:45:00","value":40.0},{"time":"2026-04-09T10:00:00","value":25.0},{"time":"2026-04-09T10:15:00","value":40.0},{"time":"2026-04-09T10:30:00","value":60.0},{"time":"2026-04-09T10:45:00","value":26.25},{"time":"2026-04-09T11:00:00","value":54.16667},{"time":"2026-04-09T11:15:00","value":41.875},{"time":"2026-04-09T11:30:00","value":38.33333},{"time":"2026-04-09T11:45:00","value":40.0},{"time":"2026-04-09T12:00:00","value":44.28571},{"time":"2026-04-09T12:15:00","value":46.0},{"time":"2026-04-09T12:30:00","value":46.875},{"time":"2026-04-09T12:45:00","value":57.08333},{"time":"2026-04-09T13:00:00","value":40.0},{"time":"2026-04-09T13:15:00","value":32.5},{"time":"2026-04-09T13:30:00","value":36.25},{"time":"2026-04-09T13:45:00","value":47.5},{"time":"2026-04-09T14:00:00","value":33.75},{"time":"2026-04-09T14:15:00","value":60.0},{"time":"2026-04-09T14:30:00","value":38.75},{"time":"2026-04-09T14:45:00","value":44.0}],"targets":[{"minutes":15,"time":"2026-04-09T15:00:00","actual":39.46429,"prediction":46.55027,"persistence":44.0,"recentMean":44.125},{"minutes":30,"time":"2026-04-09T15:15:00","actual":50.0,"prediction":47.00115,"persistence":44.0,"recentMean":44.125},{"minutes":45,"time":"2026-04-09T15:30:00","actual":44.0,"prediction":45.226934,"persistence":44.0,"recentMean":44.125},{"minutes":60,"time":"2026-04-09T15:45:00","actual":41.25,"prediction":47.22878,"persistence":44.0,"recentMean":44.125}]},{"id":"forecast-04","site":"Booth Site097","origin":"2026-04-06T23:15:00","history":[{"time":"2026-04-06T17:30:00","value":52.411215},{"time":"2026-04-06T17:45:00","value":53.615695},{"time":"2026-04-06T18:00:00","value":57.061711},{"time":"2026-04-06T18:15:00","value":55.444873},{"time":"2026-04-06T18:30:00","value":57.296819},{"time":"2026-04-06T18:45:00","value":56.06277},{"time":"2026-04-06T19:00:00","value":56.443972},{"time":"2026-04-06T19:15:00","value":58.942137},{"time":"2026-04-06T19:30:00","value":55.861969},{"time":"2026-04-06T19:45:00","value":52.621103},{"time":"2026-04-06T20:00:00","value":53.351319},{"time":"2026-04-06T20:15:00","value":53.660178},{"time":"2026-04-06T20:30:00","value":51.788731},{"time":"2026-04-06T20:45:00","value":57.296128},{"time":"2026-04-06T21:00:00","value":46.580047},{"time":"2026-04-06T21:15:00","value":54.073533},{"time":"2026-04-06T21:30:00","value":59.567805},{"time":"2026-04-06T21:45:00","value":61.183999},{"time":"2026-04-06T22:00:00","value":56.759218},{"time":"2026-04-06T22:15:00","value":63.178022},{"time":"2026-04-06T22:30:00","value":66.831336},{"time":"2026-04-06T22:45:00","value":73.856272},{"time":"2026-04-06T23:00:00","value":68.462398},{"time":"2026-04-06T23:15:00","value":69.274998}],"targets":[{"minutes":15,"time":"2026-04-06T23:30:00","actual":65.86332,"prediction":67.342,"persistence":69.275,"recentMean":69.60625},{"minutes":30,"time":"2026-04-06T23:45:00","actual":59.26506,"prediction":65.760305,"persistence":69.275,"recentMean":69.60625},{"minutes":45,"time":"2026-04-07T00:00:00","actual":51.582438,"prediction":65.591195,"persistence":69.275,"recentMean":69.60625},{"minutes":60,"time":"2026-04-07T00:15:00","actual":54.29754,"prediction":64.340977,"persistence":69.275,"recentMean":69.60625}]},{"id":"forecast-05","site":"Booth Site166","origin":"2026-04-13T21:15:00","history":[{"time":"2026-04-13T15:30:00","value":57.175346},{"time":"2026-04-13T15:45:00","value":50.94333},{"time":"2026-04-13T16:00:00","value":40.012464},{"time":"2026-04-13T16:15:00","value":37.908444},{"time":"2026-04-13T16:30:00","value":41.490753},{"time":"2026-04-13T16:45:00","value":45.497816},{"time":"2026-04-13T17:00:00","value":47.699149},{"time":"2026-04-13T17:15:00","value":46.411337},{"time":"2026-04-13T17:30:00","value":54.827128},{"time":"2026-04-13T17:45:00","value":51.29004},{"time":"2026-04-13T18:00:00","value":55.030425},{"time":"2026-04-13T18:15:00","value":51.597363},{"time":"2026-04-13T18:30:00","value":49.567377},{"time":"2026-04-13T18:45:00","value":45.90586},{"time":"2026-04-13T19:00:00","value":39.880049},{"time":"2026-04-13T19:15:00","value":52.925742},{"time":"2026-04-13T19:30:00","value":50.086523},{"time":"2026-04-13T19:45:00","value":48.998838},{"time":"2026-04-13T20:00:00","value":41.581343},{"time":"2026-04-13T20:15:00","value":34.895313},{"time":"2026-04-13T20:30:00","value":36.245268},{"time":"2026-04-13T20:45:00","value":38.303961},{"time":"2026-04-13T21:00:00","value":32.49747},{"time":"2026-04-13T21:15:00","value":35.084781}],"targets":[{"minutes":15,"time":"2026-04-13T21:30:00","actual":35.575508,"prediction":35.908438,"persistence":35.08478,"recentMean":35.53287},{"minutes":30,"time":"2026-04-13T21:45:00","actual":34.344945,"prediction":36.29433,"persistence":35.08478,"recentMean":35.53287},{"minutes":45,"time":"2026-04-13T22:00:00","actual":32.642938,"prediction":36.336277,"persistence":35.08478,"recentMean":35.53287},{"minutes":60,"time":"2026-04-13T22:15:00","actual":39.335227,"prediction":36.312445,"persistence":35.08478,"recentMean":35.53287}]},{"id":"forecast-06","site":"Booth Site136","origin":"2026-04-06T07:45:00","history":[{"time":"2026-04-06T02:00:00","value":37.122578},{"time":"2026-04-06T02:15:00","value":63.592103},{"time":"2026-04-06T02:30:00","value":55.009338},{"time":"2026-04-06T02:45:00","value":49.660343},{"time":"2026-04-06T03:00:00","value":28.636667},{"time":"2026-04-06T03:15:00","value":34.068289},{"time":"2026-04-06T03:30:00","value":34.845889},{"time":"2026-04-06T03:45:00","value":55.720712},{"time":"2026-04-06T04:00:00","value":66.452071},{"time":"2026-04-06T04:15:00","value":71.317632},{"time":"2026-04-06T04:30:00","value":66.609398},{"time":"2026-04-06T04:45:00","value":60.254786},{"time":"2026-04-06T05:00:00","value":53.862071},{"time":"2026-04-06T05:15:00","value":59.639495},{"time":"2026-04-06T05:30:00","value":41.698342},{"time":"2026-04-06T05:45:00","value":47.39899},{"time":"2026-04-06T06:00:00","value":54.654762},{"time":"2026-04-06T06:15:00","value":46.579622},{"time":"2026-04-06T06:30:00","value":43.796489},{"time":"2026-04-06T06:45:00","value":43.975411},{"time":"2026-04-06T07:00:00","value":45.144089},{"time":"2026-04-06T07:15:00","value":35.268443},{"time":"2026-04-06T07:30:00","value":39.069003},{"time":"2026-04-06T07:45:00","value":52.39539}],"targets":[{"minutes":15,"time":"2026-04-06T08:00:00","actual":46.80903,"prediction":52.904574,"persistence":52.39539,"recentMean":42.96923},{"minutes":30,"time":"2026-04-06T08:15:00","actual":43.457664,"prediction":53.048715,"persistence":52.39539,"recentMean":42.96923},{"minutes":45,"time":"2026-04-06T08:30:00","actual":44.184734,"prediction":53.372887,"persistence":52.39539,"recentMean":42.96923},{"minutes":60,"time":"2026-04-06T08:45:00","actual":47.21754,"prediction":53.00467,"persistence":52.39539,"recentMean":42.96923}]},{"id":"forecast-07","site":"Booth Site131","origin":"2026-04-09T22:00:00","history":[{"time":"2026-04-09T16:15:00","value":74.865505},{"time":"2026-04-09T16:30:00","value":74.957592},{"time":"2026-04-09T16:45:00","value":78.031848},{"time":"2026-04-09T17:00:00","value":82.211595},{"time":"2026-04-09T17:15:00","value":81.264076},{"time":"2026-04-09T17:30:00","value":79.217401},{"time":"2026-04-09T17:45:00","value":78.453331},{"time":"2026-04-09T18:00:00","value":86.853268},{"time":"2026-04-09T18:15:00","value":88.128983},{"time":"2026-04-09T18:30:00","value":88.595919},{"time":"2026-04-09T18:45:00","value":79.755798},{"time":"2026-04-09T19:00:00","value":83.430398},{"time":"2026-04-09T19:15:00","value":79.492855},{"time":"2026-04-09T19:30:00","value":89.968198},{"time":"2026-04-09T19:45:00","value":83.533923},{"time":"2026-04-09T20:00:00","value":81.949405},{"time":"2026-04-09T20:15:00","value":95.257725},{"time":"2026-04-09T20:30:00","value":74.571943},{"time":"2026-04-09T20:45:00","value":91.75},{"time":"2026-04-09T21:00:00","value":89.909131},{"time":"2026-04-09T21:15:00","value":90.01852},{"time":"2026-04-09T21:30:00","value":104.5273},{"time":"2026-04-09T21:45:00","value":102.582419},{"time":"2026-04-09T22:00:00","value":103.653843}],"targets":[{"minutes":15,"time":"2026-04-09T22:15:00","actual":87.26716,"prediction":100.38033,"persistence":103.65384,"recentMean":100.19552},{"minutes":30,"time":"2026-04-09T22:30:00","actual":78.805555,"prediction":98.06093,"persistence":103.65384,"recentMean":100.19552},{"minutes":45,"time":"2026-04-09T22:45:00","actual":76.16667,"prediction":97.81305,"persistence":103.65384,"recentMean":100.19552},{"minutes":60,"time":"2026-04-09T23:00:00","actual":101.75824,"prediction":95.7384,"persistence":103.65384,"recentMean":100.19552}]},{"id":"forecast-08","site":"Booth Site104","origin":"2026-04-15T00:45:00","history":[{"time":"2026-04-14T19:00:00","value":37.531183},{"time":"2026-04-14T19:15:00","value":36.533396},{"time":"2026-04-14T19:30:00","value":36.73786},{"time":"2026-04-14T19:45:00","value":34.884176},{"time":"2026-04-14T20:00:00","value":35.149909},{"time":"2026-04-14T20:15:00","value":37.381351},{"time":"2026-04-14T20:30:00","value":36.368555},{"time":"2026-04-14T20:45:00","value":33.526413},{"time":"2026-04-14T21:00:00","value":34.933127},{"time":"2026-04-14T21:15:00","value":38.224799},{"time":"2026-04-14T21:30:00","value":35.027604},{"time":"2026-04-14T21:45:00","value":36.278859},{"time":"2026-04-14T22:00:00","value":38.744637},{"time":"2026-04-14T22:15:00","value":40.310657},{"time":"2026-04-14T22:30:00","value":41.779222},{"time":"2026-04-14T22:45:00","value":38.816198},{"time":"2026-04-14T23:00:00","value":31.058809},{"time":"2026-04-14T23:15:00","value":34.00722},{"time":"2026-04-14T23:30:00","value":31.796681},{"time":"2026-04-14T23:45:00","value":51.492609},{"time":"2026-04-15T00:00:00","value":43.724973},{"time":"2026-04-15T00:15:00","value":48.619712},{"time":"2026-04-15T00:30:00","value":41.354358},{"time":"2026-04-15T00:45:00","value":43.931921}],"targets":[{"minutes":15,"time":"2026-04-15T01:00:00","actual":46.58189,"prediction":44.47169,"persistence":43.93192,"recentMean":44.407742},{"minutes":30,"time":"2026-04-15T01:15:00","actual":41.505848,"prediction":44.638336,"persistence":43.93192,"recentMean":44.407742},{"minutes":45,"time":"2026-04-15T01:30:00","actual":43.046703,"prediction":44.924273,"persistence":43.93192,"recentMean":44.407742},{"minutes":60,"time":"2026-04-15T01:45:00","actual":52.584066,"prediction":44.50645,"persistence":43.93192,"recentMean":44.407742}]},{"id":"forecast-09","site":"Booth Site010","origin":"2026-04-05T15:15:00","history":[{"time":"2026-04-05T09:30:00","value":40.623818},{"time":"2026-04-05T09:45:00","value":39.77703},{"time":"2026-04-05T10:00:00","value":33.142883},{"time":"2026-04-05T10:15:00","value":34.705918},{"time":"2026-04-05T10:30:00","value":41.207054},{"time":"2026-04-05T10:45:00","value":38.94374},{"time":"2026-04-05T11:00:00","value":35.075505},{"time":"2026-04-05T11:15:00","value":40.078746},{"time":"2026-04-05T11:30:00","value":39.320995},{"time":"2026-04-05T11:45:00","value":38.072522},{"time":"2026-04-05T12:00:00","value":40.251867},{"time":"2026-04-05T12:15:00","value":40.137091},{"time":"2026-04-05T12:30:00","value":38.66427},{"time":"2026-04-05T12:45:00","value":38.433045},{"time":"2026-04-05T13:00:00","value":36.849932},{"time":"2026-04-05T13:15:00","value":38.089832},{"time":"2026-04-05T13:30:00","value":39.068549},{"time":"2026-04-05T13:45:00","value":40.778619},{"time":"2026-04-05T14:00:00","value":37.903421},{"time":"2026-04-05T14:15:00","value":41.17877},{"time":"2026-04-05T14:30:00","value":39.675295},{"time":"2026-04-05T14:45:00","value":40.583806},{"time":"2026-04-05T15:00:00","value":39.179105},{"time":"2026-04-05T15:15:00","value":37.688222}],"targets":[{"minutes":15,"time":"2026-04-05T15:30:00","actual":36.642477,"prediction":36.932996,"persistence":37.688223,"recentMean":39.281605},{"minutes":30,"time":"2026-04-05T15:45:00","actual":38.524215,"prediction":36.57707,"persistence":37.688223,"recentMean":39.281605},{"minutes":45,"time":"2026-04-05T16:00:00","actual":36.291527,"prediction":36.437344,"persistence":37.688223,"recentMean":39.281605},{"minutes":60,"time":"2026-04-05T16:15:00","actual":32.60512,"prediction":35.892223,"persistence":37.688223,"recentMean":39.281605}]},{"id":"forecast-10","site":"Booth Site024","origin":"2026-04-15T01:15:00","history":[{"time":"2026-04-14T19:30:00","value":36.722724},{"time":"2026-04-14T19:45:00","value":37.754918},{"time":"2026-04-14T20:00:00","value":31.718306},{"time":"2026-04-14T20:15:00","value":30.238458},{"time":"2026-04-14T20:30:00","value":27.576084},{"time":"2026-04-14T20:45:00","value":27.081057},{"time":"2026-04-14T21:00:00","value":28.525021},{"time":"2026-04-14T21:15:00","value":31.439473},{"time":"2026-04-14T21:30:00","value":30.205696},{"time":"2026-04-14T21:45:00","value":28.582995},{"time":"2026-04-14T22:00:00","value":28.930205},{"time":"2026-04-14T22:15:00","value":31.30812},{"time":"2026-04-14T22:30:00","value":31.283078},{"time":"2026-04-14T22:45:00","value":27.91704},{"time":"2026-04-14T23:00:00","value":27.758181},{"time":"2026-04-14T23:15:00","value":31.077056},{"time":"2026-04-14T23:30:00","value":35.900496},{"time":"2026-04-14T23:45:00","value":27.987473},{"time":"2026-04-15T00:00:00","value":28.278747},{"time":"2026-04-15T00:15:00","value":29.164021},{"time":"2026-04-15T00:30:00","value":31.407842},{"time":"2026-04-15T00:45:00","value":38.945936},{"time":"2026-04-15T01:00:00","value":40.898201},{"time":"2026-04-15T01:15:00","value":37.343724}],"targets":[{"minutes":15,"time":"2026-04-15T01:30:00","actual":54.672297,"prediction":38.55214,"persistence":37.343723,"recentMean":37.148926},{"minutes":30,"time":"2026-04-15T01:45:00","actual":41.023754,"prediction":39.176957,"persistence":37.343723,"recentMean":37.148926},{"minutes":45,"time":"2026-04-15T02:00:00","actual":38.632645,"prediction":39.775477,"persistence":37.343723,"recentMean":37.148926},{"minutes":60,"time":"2026-04-15T02:15:00","actual":41.2437,"prediction":38.72716,"persistence":37.343723,"recentMean":37.148926}]},{"id":"forecast-11","site":"Booth Site063","origin":"2026-04-09T01:45:00","history":[{"time":"2026-04-08T20:00:00","value":45.299353},{"time":"2026-04-08T20:15:00","value":47.815184},{"time":"2026-04-08T20:30:00","value":45.958961},{"time":"2026-04-08T20:45:00","value":45.274383},{"time":"2026-04-08T21:00:00","value":45.75469},{"time":"2026-04-08T21:15:00","value":45.837535},{"time":"2026-04-08T21:30:00","value":43.464193},{"time":"2026-04-08T21:45:00","value":41.100621},{"time":"2026-04-08T22:00:00","value":45.901112},{"time":"2026-04-08T22:15:00","value":46.73225},{"time":"2026-04-08T22:30:00","value":46.148681},{"time":"2026-04-08T22:45:00","value":34.10109},{"time":"2026-04-08T23:00:00","value":42.330313},{"time":"2026-04-08T23:15:00","value":55.615739},{"time":"2026-04-08T23:30:00","value":44.789327},{"time":"2026-04-08T23:45:00","value":40.591605},{"time":"2026-04-09T00:00:00","value":48.293414},{"time":"2026-04-09T00:15:00","value":48.442478},{"time":"2026-04-09T00:30:00","value":47.312654},{"time":"2026-04-09T00:45:00","value":47.968354},{"time":"2026-04-09T01:00:00","value":51.148362},{"time":"2026-04-09T01:15:00","value":47.598443},{"time":"2026-04-09T01:30:00","value":50.977091},{"time":"2026-04-09T01:45:00","value":46.067709}],"targets":[{"minutes":15,"time":"2026-04-09T02:00:00","actual":44.8787,"prediction":48.25362,"persistence":46.06771,"recentMean":48.9479},{"minutes":30,"time":"2026-04-09T02:15:00","actual":45.146293,"prediction":49.34647,"persistence":46.06771,"recentMean":48.9479},{"minutes":45,"time":"2026-04-09T02:30:00","actual":43.070188,"prediction":50.53252,"persistence":46.06771,"recentMean":48.9479},{"minutes":60,"time":"2026-04-09T02:45:00","actual":43.736516,"prediction":48.780438,"persistence":46.06771,"recentMean":48.9479}]},{"id":"forecast-12","site":"Booth Site107","origin":"2026-04-09T01:45:00","history":[{"time":"2026-04-08T20:00:00","value":33.651959},{"time":"2026-04-08T20:15:00","value":35.589974},{"time":"2026-04-08T20:30:00","value":39.057943},{"time":"2026-04-08T20:45:00","value":40.785401},{"time":"2026-04-08T21:00:00","value":43.771698},{"time":"2026-04-08T21:15:00","value":43.217609},{"time":"2026-04-08T21:30:00","value":36.816386},{"time":"2026-04-08T21:45:00","value":32.690097},{"time":"2026-04-08T22:00:00","value":33.369166},{"time":"2026-04-08T22:15:00","value":34.540632},{"time":"2026-04-08T22:30:00","value":41.445253},{"time":"2026-04-08T22:45:00","value":38.912611},{"time":"2026-04-08T23:00:00","value":40.421965},{"time":"2026-04-08T23:15:00","value":42.061018},{"time":"2026-04-08T23:30:00","value":48.103411},{"time":"2026-04-08T23:45:00","value":44.418798},{"time":"2026-04-09T00:00:00","value":52.051916},{"time":"2026-04-09T00:15:00","value":47.178716},{"time":"2026-04-09T00:30:00","value":52.789017},{"time":"2026-04-09T00:45:00","value":48.193236},{"time":"2026-04-09T01:00:00","value":57.686345},{"time":"2026-04-09T01:15:00","value":53.065638},{"time":"2026-04-09T01:30:00","value":54.473821},{"time":"2026-04-09T01:45:00","value":58.447217}],"targets":[{"minutes":15,"time":"2026-04-09T02:00:00","actual":65.044742,"prediction":55.650312,"persistence":58.447215,"recentMean":55.918258},{"minutes":30,"time":"2026-04-09T02:15:00","actual":63.880406,"prediction":53.634227,"persistence":58.447215,"recentMean":55.918258},{"minutes":45,"time":"2026-04-09T02:30:00","actual":64.400004,"prediction":53.548168,"persistence":58.447215,"recentMean":55.918258},{"minutes":60,"time":"2026-04-09T02:45:00","actual":65.84282,"prediction":52.250125,"persistence":58.447215,"recentMean":55.918258}]},{"id":"forecast-13","site":"Booth Site036","origin":"2026-04-10T10:45:00","history":[{"time":"2026-04-10T05:00:00","value":56.290141},{"time":"2026-04-10T05:15:00","value":49.900419},{"time":"2026-04-10T05:30:00","value":56.500182},{"time":"2026-04-10T05:45:00","value":45.055712},{"time":"2026-04-10T06:00:00","value":47.968588},{"time":"2026-04-10T06:15:00","value":47.241026},{"time":"2026-04-10T06:30:00","value":44.726342},{"time":"2026-04-10T06:45:00","value":44.173906},{"time":"2026-04-10T07:00:00","value":40.349238},{"time":"2026-04-10T07:15:00","value":41.51642},{"time":"2026-04-10T07:30:00","value":40.465294},{"time":"2026-04-10T07:45:00","value":36.742027},{"time":"2026-04-10T08:00:00","value":36.456347},{"time":"2026-04-10T08:15:00","value":37.544661},{"time":"2026-04-10T08:30:00","value":37.697698},{"time":"2026-04-10T08:45:00","value":35.799497},{"time":"2026-04-10T09:00:00","value":33.459258},{"time":"2026-04-10T09:15:00","value":34.891999},{"time":"2026-04-10T09:30:00","value":33.657596},{"time":"2026-04-10T09:45:00","value":34.718111},{"time":"2026-04-10T10:00:00","value":32.904867},{"time":"2026-04-10T10:15:00","value":33.5862},{"time":"2026-04-10T10:30:00","value":34.546494},{"time":"2026-04-10T10:45:00","value":36.683845}],"targets":[{"minutes":15,"time":"2026-04-10T11:00:00","actual":39.364098,"prediction":35.997258,"persistence":36.683844,"recentMean":34.43035},{"minutes":30,"time":"2026-04-10T11:15:00","actual":32.31616,"prediction":35.507297,"persistence":36.683844,"recentMean":34.43035},{"minutes":45,"time":"2026-04-10T11:30:00","actual":32.780266,"prediction":35.2684,"persistence":36.683844,"recentMean":34.43035},{"minutes":60,"time":"2026-04-10T11:45:00","actual":33.191645,"prediction":34.72912,"persistence":36.683844,"recentMean":34.43035}]},{"id":"forecast-14","site":"Booth Site100","origin":"2026-04-05T15:15:00","history":[{"time":"2026-04-05T09:30:00","value":46.342311},{"time":"2026-04-05T09:45:00","value":47.662533},{"time":"2026-04-05T10:00:00","value":49.10706},{"time":"2026-04-05T10:15:00","value":42.228734},{"time":"2026-04-05T10:30:00","value":41.428103},{"time":"2026-04-05T10:45:00","value":42.563654},{"time":"2026-04-05T11:00:00","value":46.086658},{"time":"2026-04-05T11:15:00","value":42.054335},{"time":"2026-04-05T11:30:00","value":41.712266},{"time":"2026-04-05T11:45:00","value":38.66838},{"time":"2026-04-05T12:00:00","value":44.132553},{"time":"2026-04-05T12:15:00","value":41.685134},{"time":"2026-04-05T12:30:00","value":41.363643},{"time":"2026-04-05T12:45:00","value":38.769104},{"time":"2026-04-05T13:00:00","value":40.053974},{"time":"2026-04-05T13:15:00","value":42.162264},{"time":"2026-04-05T13:30:00","value":38.774744},{"time":"2026-04-05T13:45:00","value":36.34416},{"time":"2026-04-05T14:00:00","value":38.15711},{"time":"2026-04-05T14:15:00","value":38.556626},{"time":"2026-04-05T14:30:00","value":41.657778},{"time":"2026-04-05T14:45:00","value":40.588766},{"time":"2026-04-05T15:00:00","value":38.222533},{"time":"2026-04-05T15:15:00","value":42.664249}],"targets":[{"minutes":15,"time":"2026-04-05T15:30:00","actual":40.20151,"prediction":43.064805,"persistence":42.66425,"recentMean":40.783332},{"minutes":30,"time":"2026-04-05T15:45:00","actual":36.845816,"prediction":43.036867,"persistence":42.66425,"recentMean":40.783332},{"minutes":45,"time":"2026-04-05T16:00:00","actual":41.202113,"prediction":43.004227,"persistence":42.66425,"recentMean":40.783332},{"minutes":60,"time":"2026-04-05T16:15:00","actual":38.408188,"prediction":43.096195,"persistence":42.66425,"recentMean":40.783332}]},{"id":"forecast-15","site":"Booth Site045","origin":"2026-04-06T07:45:00","history":[{"time":"2026-04-06T02:00:00","value":74.364511},{"time":"2026-04-06T02:15:00","value":77.510433},{"time":"2026-04-06T02:30:00","value":79.243107},{"time":"2026-04-06T02:45:00","value":82.076142},{"time":"2026-04-06T03:00:00","value":74.657315},{"time":"2026-04-06T03:15:00","value":60.840672},{"time":"2026-04-06T03:30:00","value":53.702669},{"time":"2026-04-06T03:45:00","value":73.127284},{"time":"2026-04-06T04:00:00","value":50.497734},{"time":"2026-04-06T04:15:00","value":53.067231},{"time":"2026-04-06T04:30:00","value":61.250609},{"time":"2026-04-06T04:45:00","value":70.573273},{"time":"2026-04-06T05:00:00","value":77.056029},{"time":"2026-04-06T05:15:00","value":69.280316},{"time":"2026-04-06T05:30:00","value":57.794775},{"time":"2026-04-06T05:45:00","value":64.382984},{"time":"2026-04-06T06:00:00","value":73.939121},{"time":"2026-04-06T06:15:00","value":62.522859},{"time":"2026-04-06T06:30:00","value":61.807518},{"time":"2026-04-06T06:45:00","value":76.743921},{"time":"2026-04-06T07:00:00","value":64.155051},{"time":"2026-04-06T07:15:00","value":60.230071},{"time":"2026-04-06T07:30:00","value":53.805329},{"time":"2026-04-06T07:45:00","value":51.315469}],"targets":[{"minutes":15,"time":"2026-04-06T08:00:00","actual":55.369117,"prediction":51.023152,"persistence":51.31547,"recentMean":57.37648},{"minutes":30,"time":"2026-04-06T08:15:00","actual":49.98838,"prediction":50.665973,"persistence":51.31547,"recentMean":57.37648},{"minutes":45,"time":"2026-04-06T08:30:00","actual":54.257688,"prediction":50.575094,"persistence":51.31547,"recentMean":57.37648},{"minutes":60,"time":"2026-04-06T08:45:00","actual":58.58584,"prediction":50.1881,"persistence":51.31547,"recentMean":57.37648}]},{"id":"forecast-16","site":"Booth Site159","origin":"2026-04-14T13:45:00","history":[{"time":"2026-04-14T08:00:00","value":43.059505},{"time":"2026-04-14T08:15:00","value":48.625535},{"time":"2026-04-14T08:30:00","value":50.047789},{"time":"2026-04-14T08:45:00","value":49.171317},{"time":"2026-04-14T09:00:00","value":55.822357},{"time":"2026-04-14T09:15:00","value":51.210282},{"time":"2026-04-14T09:30:00","value":48.328193},{"time":"2026-04-14T09:45:00","value":50.778998},{"time":"2026-04-14T10:00:00","value":45.809683},{"time":"2026-04-14T10:15:00","value":45.057282},{"time":"2026-04-14T10:30:00","value":47.199246},{"time":"2026-04-14T10:45:00","value":44.191195},{"time":"2026-04-14T11:00:00","value":50.53637},{"time":"2026-04-14T11:15:00","value":49.434804},{"time":"2026-04-14T11:30:00","value":43.776234},{"time":"2026-04-14T11:45:00","value":57.606542},{"time":"2026-04-14T12:00:00","value":56.548349},{"time":"2026-04-14T12:15:00","value":45.233776},{"time":"2026-04-14T12:30:00","value":47.406517},{"time":"2026-04-14T12:45:00","value":49.975892},{"time":"2026-04-14T13:00:00","value":48.082508},{"time":"2026-04-14T13:15:00","value":47.286312},{"time":"2026-04-14T13:30:00","value":49.582603},{"time":"2026-04-14T13:45:00","value":47.035702}],"targets":[{"minutes":15,"time":"2026-04-14T14:00:00","actual":51.474105,"prediction":47.447375,"persistence":47.035703,"recentMean":47.99678},{"minutes":30,"time":"2026-04-14T14:15:00","actual":52.422266,"prediction":47.465938,"persistence":47.035703,"recentMean":47.99678},{"minutes":45,"time":"2026-04-14T14:30:00","actual":42.907887,"prediction":47.314023,"persistence":47.035703,"recentMean":47.99678},{"minutes":60,"time":"2026-04-14T14:45:00","actual":46.62952,"prediction":47.52906,"persistence":47.035703,"recentMean":47.99678}]},{"id":"forecast-17","site":"Booth Site079","origin":"2026-04-11T19:45:00","history":[{"time":"2026-04-11T14:00:00","value":43.751587},{"time":"2026-04-11T14:15:00","value":39.529824},{"time":"2026-04-11T14:30:00","value":43.077235},{"time":"2026-04-11T14:45:00","value":40.325064},{"time":"2026-04-11T15:00:00","value":42.491473},{"time":"2026-04-11T15:15:00","value":41.794387},{"time":"2026-04-11T15:30:00","value":41.483017},{"time":"2026-04-11T15:45:00","value":43.37938},{"time":"2026-04-11T16:00:00","value":40.739683},{"time":"2026-04-11T16:15:00","value":40.003792},{"time":"2026-04-11T16:30:00","value":44.227434},{"time":"2026-04-11T16:45:00","value":41.927288},{"time":"2026-04-11T17:00:00","value":35.891003},{"time":"2026-04-11T17:15:00","value":42.375451},{"time":"2026-04-11T17:30:00","value":39.108689},{"time":"2026-04-11T17:45:00","value":39.757075},{"time":"2026-04-11T18:00:00","value":41.099606},{"time":"2026-04-11T18:15:00","value":39.204962},{"time":"2026-04-11T18:30:00","value":40.394115},{"time":"2026-04-11T18:45:00","value":42.232318},{"time":"2026-04-11T19:00:00","value":38.484994},{"time":"2026-04-11T19:15:00","value":38.090069},{"time":"2026-04-11T19:30:00","value":36.864724},{"time":"2026-04-11T19:45:00","value":32.83146}],"targets":[{"minutes":15,"time":"2026-04-11T20:00:00","actual":35.680566,"prediction":33.20733,"persistence":32.83146,"recentMean":36.567812},{"minutes":30,"time":"2026-04-11T20:15:00","actual":32.913965,"prediction":33.222605,"persistence":32.83146,"recentMean":36.567812},{"minutes":45,"time":"2026-04-11T20:30:00","actual":37.004562,"prediction":33.173582,"persistence":32.83146,"recentMean":36.567812},{"minutes":60,"time":"2026-04-11T20:45:00","actual":34.05679,"prediction":33.28297,"persistence":32.83146,"recentMean":36.567812}]},{"id":"forecast-18","site":"Booth Site078","origin":"2026-04-15T06:15:00","history":[{"time":"2026-04-15T00:30:00","value":65.058288},{"time":"2026-04-15T00:45:00","value":66.66954},{"time":"2026-04-15T01:00:00","value":74.333919},{"time":"2026-04-15T01:15:00","value":62.602964},{"time":"2026-04-15T01:30:00","value":66.744309},{"time":"2026-04-15T01:45:00","value":67.850961},{"time":"2026-04-15T02:00:00","value":66.441496},{"time":"2026-04-15T02:15:00","value":77.4329},{"time":"2026-04-15T02:30:00","value":74.970927},{"time":"2026-04-15T02:45:00","value":71.803191},{"time":"2026-04-15T03:00:00","value":62.395497},{"time":"2026-04-15T03:15:00","value":70.701489},{"time":"2026-04-15T03:30:00","value":60.174809},{"time":"2026-04-15T03:45:00","value":62.355361},{"time":"2026-04-15T04:00:00","value":73.039283},{"time":"2026-04-15T04:15:00","value":68.205382},{"time":"2026-04-15T04:30:00","value":60.086515},{"time":"2026-04-15T04:45:00","value":60.308799},{"time":"2026-04-15T05:00:00","value":67.635803},{"time":"2026-04-15T05:15:00","value":65.549199},{"time":"2026-04-15T05:30:00","value":61.221733},{"time":"2026-04-15T05:45:00","value":63.365922},{"time":"2026-04-15T06:00:00","value":67.038031},{"time":"2026-04-15T06:15:00","value":66.071191}],"targets":[{"minutes":15,"time":"2026-04-15T06:30:00","actual":61.989848,"prediction":64.36145,"persistence":66.071195,"recentMean":64.42422},{"minutes":30,"time":"2026-04-15T06:45:00","actual":54.754965,"prediction":62.816734,"persistence":66.071195,"recentMean":64.42422},{"minutes":45,"time":"2026-04-15T07:00:00","actual":52.508805,"prediction":62.612957,"persistence":66.071195,"recentMean":64.42422},{"minutes":60,"time":"2026-04-15T07:15:00","actual":52.58704,"prediction":61.777734,"persistence":66.071195,"recentMean":64.42422}]},{"id":"forecast-19","site":"Booth Site015","origin":"2026-04-07T20:15:00","history":[{"time":"2026-04-07T14:30:00","value":22.812498},{"time":"2026-04-07T14:45:00","value":23.299357},{"time":"2026-04-07T15:00:00","value":23.446719},{"time":"2026-04-07T15:15:00","value":19.123776},{"time":"2026-04-07T15:30:00","value":19.328127},{"time":"2026-04-07T15:45:00","value":22.352606},{"time":"2026-04-07T16:00:00","value":22.978656},{"time":"2026-04-07T16:15:00","value":20.46624},{"time":"2026-04-07T16:30:00","value":22.644495},{"time":"2026-04-07T16:45:00","value":19.353639},{"time":"2026-04-07T17:00:00","value":23.136773},{"time":"2026-04-07T17:15:00","value":23.170499},{"time":"2026-04-07T17:30:00","value":23.285577},{"time":"2026-04-07T17:45:00","value":24.423969},{"time":"2026-04-07T18:00:00","value":25.032078},{"time":"2026-04-07T18:15:00","value":30.506944},{"time":"2026-04-07T18:30:00","value":28.157562},{"time":"2026-04-07T18:45:00","value":30.769998},{"time":"2026-04-07T19:00:00","value":31.821919},{"time":"2026-04-07T19:15:00","value":36.600003},{"time":"2026-04-07T19:30:00","value":30.684779},{"time":"2026-04-07T19:45:00","value":32.637098},{"time":"2026-04-07T20:00:00","value":34.935344},{"time":"2026-04-07T20:15:00","value":33.388886}],"targets":[{"minutes":15,"time":"2026-04-07T20:30:00","actual":32.906254,"prediction":33.256324,"persistence":33.388887,"recentMean":32.911527},{"minutes":30,"time":"2026-04-07T20:45:00","actual":36.515152,"prediction":33.070547,"persistence":33.388887,"recentMean":32.911527},{"minutes":45,"time":"2026-04-07T21:00:00","actual":34.9375,"prediction":33.09368,"persistence":33.388887,"recentMean":32.911527},{"minutes":60,"time":"2026-04-07T21:15:00","actual":33.442715,"prediction":33.016176,"persistence":33.388887,"recentMean":32.911527}]},{"id":"forecast-20","site":"Booth Site018","origin":"2026-04-11T19:45:00","history":[{"time":"2026-04-11T14:00:00","value":30.083326},{"time":"2026-04-11T14:15:00","value":28.780341},{"time":"2026-04-11T14:30:00","value":28.960128},{"time":"2026-04-11T14:45:00","value":28.780852},{"time":"2026-04-11T15:00:00","value":30.557784},{"time":"2026-04-11T15:15:00","value":29.11328},{"time":"2026-04-11T15:30:00","value":28.056535},{"time":"2026-04-11T15:45:00","value":29.23188},{"time":"2026-04-11T16:00:00","value":30.535335},{"time":"2026-04-11T16:15:00","value":29.461428},{"time":"2026-04-11T16:30:00","value":28.079935},{"time":"2026-04-11T16:45:00","value":29.381829},{"time":"2026-04-11T17:00:00","value":29.206174},{"time":"2026-04-11T17:15:00","value":30.612774},{"time":"2026-04-11T17:30:00","value":34.643695},{"time":"2026-04-11T17:45:00","value":34.433836},{"time":"2026-04-11T18:00:00","value":35.792395},{"time":"2026-04-11T18:15:00","value":33.376499},{"time":"2026-04-11T18:30:00","value":28.724072},{"time":"2026-04-11T18:45:00","value":32.499867},{"time":"2026-04-11T19:00:00","value":28.784512},{"time":"2026-04-11T19:15:00","value":34.140462},{"time":"2026-04-11T19:30:00","value":36.347937},{"time":"2026-04-11T19:45:00","value":35.653855}],"targets":[{"minutes":15,"time":"2026-04-11T20:00:00","actual":30.12584,"prediction":35.62073,"persistence":35.653855,"recentMean":33.73169},{"minutes":30,"time":"2026-04-11T20:15:00","actual":30.330264,"prediction":35.468906,"persistence":35.653855,"recentMean":33.73169},{"minutes":45,"time":"2026-04-11T20:30:00","actual":28.297887,"prediction":35.47641,"persistence":35.653855,"recentMean":33.73169},{"minutes":60,"time":"2026-04-11T20:45:00","actual":31.427693,"prediction":35.420074,"persistence":35.653855,"recentMean":33.73169}]},{"id":"forecast-21","site":"Booth Site053","origin":"2026-04-14T13:45:00","history":[{"time":"2026-04-14T08:00:00","value":40.162651},{"time":"2026-04-14T08:15:00","value":40.359004},{"time":"2026-04-14T08:30:00","value":33.34266},{"time":"2026-04-14T08:45:00","value":27.46196},{"time":"2026-04-14T09:00:00","value":20.362351},{"time":"2026-04-14T09:15:00","value":22.839813},{"time":"2026-04-14T09:30:00","value":20.7062},{"time":"2026-04-14T09:45:00","value":23.851093},{"time":"2026-04-14T10:00:00","value":22.652087},{"time":"2026-04-14T10:15:00","value":21.281117},{"time":"2026-04-14T10:30:00","value":23.519061},{"time":"2026-04-14T10:45:00","value":18.945016},{"time":"2026-04-14T11:00:00","value":22.405211},{"time":"2026-04-14T11:15:00","value":22.638335},{"time":"2026-04-14T11:30:00","value":23.10217},{"time":"2026-04-14T11:45:00","value":18.921876},{"time":"2026-04-14T12:00:00","value":19.376922},{"time":"2026-04-14T12:15:00","value":19.495437},{"time":"2026-04-14T12:30:00","value":21.046873},{"time":"2026-04-14T12:45:00","value":23.991201},{"time":"2026-04-14T13:00:00","value":21.382543},{"time":"2026-04-14T13:15:00","value":20.153426},{"time":"2026-04-14T13:30:00","value":18.343184},{"time":"2026-04-14T13:45:00","value":22.509316}],"targets":[{"minutes":15,"time":"2026-04-14T14:00:00","actual":21.450969,"prediction":23.468727,"persistence":22.509316,"recentMean":20.597117},{"minutes":30,"time":"2026-04-14T14:15:00","actual":24.861908,"prediction":23.557521,"persistence":22.509316,"recentMean":20.597117},{"minutes":45,"time":"2026-04-14T14:30:00","actual":22.951094,"prediction":23.384297,"persistence":22.509316,"recentMean":20.597117},{"minutes":60,"time":"2026-04-14T14:45:00","actual":23.079154,"prediction":23.652658,"persistence":22.509316,"recentMean":20.597117}]},{"id":"forecast-22","site":"Booth Site129","origin":"2026-04-07T16:45:00","history":[{"time":"2026-04-07T11:00:00","value":31.296965},{"time":"2026-04-07T11:15:00","value":34.804647},{"time":"2026-04-07T11:30:00","value":33.337423},{"time":"2026-04-07T11:45:00","value":30.805523},{"time":"2026-04-07T12:00:00","value":29.348343},{"time":"2026-04-07T12:15:00","value":28.381991},{"time":"2026-04-07T12:30:00","value":30.715425},{"time":"2026-04-07T12:45:00","value":34.041796},{"time":"2026-04-07T13:00:00","value":31.874604},{"time":"2026-04-07T13:15:00","value":31.089535},{"time":"2026-04-07T13:30:00","value":29.476102},{"time":"2026-04-07T13:45:00","value":31.468669},{"time":"2026-04-07T14:00:00","value":35.06874},{"time":"2026-04-07T14:15:00","value":33.770085},{"time":"2026-04-07T14:30:00","value":31.919396},{"time":"2026-04-07T14:45:00","value":31.862133},{"time":"2026-04-07T15:00:00","value":29.706121},{"time":"2026-04-07T15:15:00","value":30.800422},{"time":"2026-04-07T15:30:00","value":33.212611},{"time":"2026-04-07T15:45:00","value":28.110748},{"time":"2026-04-07T16:00:00","value":29.670927},{"time":"2026-04-07T16:15:00","value":30.301683},{"time":"2026-04-07T16:30:00","value":30.526189},{"time":"2026-04-07T16:45:00","value":30.914747}],"targets":[{"minutes":15,"time":"2026-04-07T17:00:00","actual":32.208824,"prediction":31.653543,"persistence":30.914746,"recentMean":30.353387},{"minutes":30,"time":"2026-04-07T17:15:00","actual":31.674354,"prediction":31.712902,"persistence":30.914746,"recentMean":30.353387},{"minutes":45,"time":"2026-04-07T17:30:00","actual":31.964848,"prediction":31.55527,"persistence":30.914746,"recentMean":30.353387},{"minutes":60,"time":"2026-04-07T17:45:00","actual":32.722797,"prediction":31.741727,"persistence":30.914746,"recentMean":30.353387}]},{"id":"forecast-23","site":"Booth Site028","origin":"2026-04-15T21:30:00","history":[{"time":"2026-04-15T15:45:00","value":37.038959},{"time":"2026-04-15T16:00:00","value":38.181386},{"time":"2026-04-15T16:15:00","value":38.885601},{"time":"2026-04-15T16:30:00","value":38.358355},{"time":"2026-04-15T16:45:00","value":38.253897},{"time":"2026-04-15T17:00:00","value":36.910953},{"time":"2026-04-15T17:15:00","value":39.43319},{"time":"2026-04-15T17:30:00","value":38.210785},{"time":"2026-04-15T17:45:00","value":36.353793},{"time":"2026-04-15T18:00:00","value":36.818097},{"time":"2026-04-15T18:15:00","value":32.84732},{"time":"2026-04-15T18:30:00","value":36.952923},{"time":"2026-04-15T18:45:00","value":39.359485},{"time":"2026-04-15T19:00:00","value":35.044841},{"time":"2026-04-15T19:15:00","value":33.873109},{"time":"2026-04-15T19:30:00","value":36.968207},{"time":"2026-04-15T19:45:00","value":35.295636},{"time":"2026-04-15T20:00:00","value":33.277977},{"time":"2026-04-15T20:15:00","value":36.842279},{"time":"2026-04-15T20:30:00","value":33.507907},{"time":"2026-04-15T20:45:00","value":35.016439},{"time":"2026-04-15T21:00:00","value":32.409384},{"time":"2026-04-15T21:15:00","value":30.440636},{"time":"2026-04-15T21:30:00","value":29.0354}],"targets":[{"minutes":15,"time":"2026-04-15T21:45:00","actual":33.020363,"prediction":30.479104,"persistence":29.0354,"recentMean":31.725463},{"minutes":30,"time":"2026-04-15T22:00:00","actual":31.69082,"prediction":31.168877,"persistence":29.0354,"recentMean":31.725463},{"minutes":45,"time":"2026-04-15T22:15:00","actual":27.40245,"prediction":31.889783,"persistence":29.0354,"recentMean":31.725463},{"minutes":60,"time":"2026-04-15T22:30:00","actual":27.132273,"prediction":30.873723,"persistence":29.0354,"recentMean":31.725463}]},{"id":"forecast-24","site":"Booth Site064","origin":"2026-04-12T04:45:00","history":[{"time":"2026-04-11T23:00:00","value":37.350529},{"time":"2026-04-11T23:15:00","value":51.505605},{"time":"2026-04-11T23:30:00","value":47.640881},{"time":"2026-04-11T23:45:00","value":66.827784},{"time":"2026-04-12T00:00:00","value":52.304186},{"time":"2026-04-12T00:15:00","value":47.93625},{"time":"2026-04-12T00:30:00","value":50.717564},{"time":"2026-04-12T00:45:00","value":54.149176},{"time":"2026-04-12T01:00:00","value":44.162674},{"time":"2026-04-12T01:15:00","value":39.57787},{"time":"2026-04-12T01:30:00","value":41.217633},{"time":"2026-04-12T01:45:00","value":39.14316},{"time":"2026-04-12T02:00:00","value":50.940855},{"time":"2026-04-12T02:15:00","value":47.278565},{"time":"2026-04-12T02:30:00","value":40.185224},{"time":"2026-04-12T02:45:00","value":40.908599},{"time":"2026-04-12T03:00:00","value":47.436149},{"time":"2026-04-12T03:15:00","value":52.208604},{"time":"2026-04-12T03:30:00","value":61.08782},{"time":"2026-04-12T03:45:00","value":52.590326},{"time":"2026-04-12T04:00:00","value":47.12153},{"time":"2026-04-12T04:15:00","value":40.415947},{"time":"2026-04-12T04:30:00","value":52.241847},{"time":"2026-04-12T04:45:00","value":48.724701}],"targets":[{"minutes":15,"time":"2026-04-12T05:00:00","actual":31.220639,"prediction":49.71775,"persistence":48.724703,"recentMean":47.126008},{"minutes":30,"time":"2026-04-12T05:15:00","actual":43.458332,"prediction":50.161883,"persistence":48.724703,"recentMean":47.126008},{"minutes":45,"time":"2026-04-12T05:30:00","actual":49.261562,"prediction":50.854797,"persistence":48.724703,"recentMean":47.126008},{"minutes":60,"time":"2026-04-12T05:45:00","actual":49.23413,"prediction":49.82989,"persistence":48.724703,"recentMean":47.126008}]},{"id":"forecast-25","site":"Booth Site155","origin":"2026-04-15T08:45:00","history":[{"time":"2026-04-15T03:00:00","value":42.074076},{"time":"2026-04-15T03:15:00","value":29.647729},{"time":"2026-04-15T03:30:00","value":52.471425},{"time":"2026-04-15T03:45:00","value":70.474509},{"time":"2026-04-15T04:00:00","value":65.251736},{"time":"2026-04-15T04:15:00","value":65.457064},{"time":"2026-04-15T04:30:00","value":43.644737},{"time":"2026-04-15T04:45:00","value":51.48077},{"time":"2026-04-15T05:00:00","value":44.130436},{"time":"2026-04-15T05:15:00","value":34.227677},{"time":"2026-04-15T05:30:00","value":29.476741},{"time":"2026-04-15T05:45:00","value":31.227971},{"time":"2026-04-15T06:00:00","value":38.152013},{"time":"2026-04-15T06:15:00","value":34.299652},{"time":"2026-04-15T06:30:00","value":32.205573},{"time":"2026-04-15T06:45:00","value":33.232392},{"time":"2026-04-15T07:00:00","value":29.844798},{"time":"2026-04-15T07:15:00","value":32.016564},{"time":"2026-04-15T07:30:00","value":30.563123},{"time":"2026-04-15T07:45:00","value":33.919623},{"time":"2026-04-15T08:00:00","value":32.794468},{"time":"2026-04-15T08:15:00","value":32.899754},{"time":"2026-04-15T08:30:00","value":38.012003},{"time":"2026-04-15T08:45:00","value":30.264707}],"targets":[{"minutes":15,"time":"2026-04-15T09:00:00","actual":28.247258,"prediction":30.666656,"persistence":30.264707,"recentMean":33.49273},{"minutes":30,"time":"2026-04-15T09:15:00","actual":33.069426,"prediction":30.553277,"persistence":30.264707,"recentMean":33.49273},{"minutes":45,"time":"2026-04-15T09:30:00","actual":30.215947,"prediction":30.438574,"persistence":30.264707,"recentMean":33.49273},{"minutes":60,"time":"2026-04-15T09:45:00","actual":31.40648,"prediction":30.4512,"persistence":30.264707,"recentMean":33.49273}]},{"id":"forecast-26","site":"Booth Site098","origin":"2026-04-11T22:15:00","history":[{"time":"2026-04-11T16:30:00","value":38.524912},{"time":"2026-04-11T16:45:00","value":36.684231},{"time":"2026-04-11T17:00:00","value":38.291968},{"time":"2026-04-11T17:15:00","value":38.26713},{"time":"2026-04-11T17:30:00","value":41.809493},{"time":"2026-04-11T17:45:00","value":42.53527},{"time":"2026-04-11T18:00:00","value":44.535488},{"time":"2026-04-11T18:15:00","value":50.497457},{"time":"2026-04-11T18:30:00","value":45.780517},{"time":"2026-04-11T18:45:00","value":43.183235},{"time":"2026-04-11T19:00:00","value":38.899739},{"time":"2026-04-11T19:15:00","value":43.791838},{"time":"2026-04-11T19:30:00","value":52.742862},{"time":"2026-04-11T19:45:00","value":39.915941},{"time":"2026-04-11T20:00:00","value":37.399688},{"time":"2026-04-11T20:15:00","value":34.230197},{"time":"2026-04-11T20:30:00","value":40.41813},{"time":"2026-04-11T20:45:00","value":40.912663},{"time":"2026-04-11T21:00:00","value":40.469672},{"time":"2026-04-11T21:15:00","value":41.891126},{"time":"2026-04-11T21:30:00","value":40.984112},{"time":"2026-04-11T21:45:00","value":41.453028},{"time":"2026-04-11T22:00:00","value":42.167758},{"time":"2026-04-11T22:15:00","value":42.458505}],"targets":[{"minutes":15,"time":"2026-04-11T22:30:00","actual":41.929453,"prediction":44.304504,"persistence":42.458504,"recentMean":41.76585},{"minutes":30,"time":"2026-04-11T22:45:00","actual":40.654145,"prediction":45.22665,"persistence":42.458504,"recentMean":41.76585},{"minutes":45,"time":"2026-04-11T23:00:00","actual":37.108418,"prediction":46.093562,"persistence":42.458504,"recentMean":41.76585},{"minutes":60,"time":"2026-04-11T23:15:00","actual":40.000094,"prediction":44.853406,"persistence":42.458504,"recentMean":41.76585}]},{"id":"forecast-27","site":"Booth Site044","origin":"2026-04-10T10:45:00","history":[{"time":"2026-04-10T05:00:00","value":50.97826},{"time":"2026-04-10T05:15:00","value":45.193664},{"time":"2026-04-10T05:30:00","value":44.715186},{"time":"2026-04-10T05:45:00","value":45.115983},{"time":"2026-04-10T06:00:00","value":40.421878},{"time":"2026-04-10T06:15:00","value":38.913041},{"time":"2026-04-10T06:30:00","value":37.928878},{"time":"2026-04-10T06:45:00","value":36.36938},{"time":"2026-04-10T07:00:00","value":35.255813},{"time":"2026-04-10T07:15:00","value":36.964288},{"time":"2026-04-10T07:30:00","value":24.46846},{"time":"2026-04-10T07:45:00","value":29.813015},{"time":"2026-04-10T08:00:00","value":29.676533},{"time":"2026-04-10T08:15:00","value":22.241696},{"time":"2026-04-10T08:30:00","value":24.227049},{"time":"2026-04-10T08:45:00","value":19.843302},{"time":"2026-04-10T09:00:00","value":18.807745},{"time":"2026-04-10T09:15:00","value":19.850988},{"time":"2026-04-10T09:30:00","value":21.654286},{"time":"2026-04-10T09:45:00","value":20.248747},{"time":"2026-04-10T10:00:00","value":19.837535},{"time":"2026-04-10T10:15:00","value":21.091435},{"time":"2026-04-10T10:30:00","value":21.509337},{"time":"2026-04-10T10:45:00","value":16.925596}],"targets":[{"minutes":15,"time":"2026-04-10T11:00:00","actual":16.851375,"prediction":17.847598,"persistence":16.925596,"recentMean":19.840975},{"minutes":30,"time":"2026-04-10T11:15:00","actual":20.860568,"prediction":17.86554,"persistence":16.925596,"recentMean":19.840975},{"minutes":45,"time":"2026-04-10T11:30:00","actual":16.048357,"prediction":17.753367,"persistence":16.925596,"recentMean":19.840975},{"minutes":60,"time":"2026-04-10T11:45:00","actual":17.799445,"prediction":17.928566,"persistence":16.925596,"recentMean":19.840975}]},{"id":"forecast-28","site":"Booth Site099","origin":"2026-04-11T03:15:00","history":[{"time":"2026-04-10T21:30:00","value":37.13043},{"time":"2026-04-10T21:45:00","value":36.72414},{"time":"2026-04-10T22:00:00","value":28.23469},{"time":"2026-04-10T22:15:00","value":27.0},{"time":"2026-04-10T22:30:00","value":19.50909},{"time":"2026-04-10T22:45:00","value":26.68548},{"time":"2026-04-10T23:00:00","value":34.18293},{"time":"2026-04-10T23:15:00","value":32.18056},{"time":"2026-04-10T23:30:00","value":31.85849},{"time":"2026-04-10T23:45:00","value":41.75},{"time":"2026-04-11T00:00:00","value":33.47297},{"time":"2026-04-11T00:15:00","value":35.27778},{"time":"2026-04-11T00:30:00","value":34.13636},{"time":"2026-04-11T00:45:00","value":37.5},{"time":"2026-04-11T01:00:00","value":36.73077},{"time":"2026-04-11T01:15:00","value":36.46875},{"time":"2026-04-11T01:30:00","value":50.83333},{"time":"2026-04-11T01:45:00","value":32.06522},{"time":"2026-04-11T02:00:00","value":35.8},{"time":"2026-04-11T02:15:00","value":35.33333},{"time":"2026-04-11T02:30:00","value":42.35294},{"time":"2026-04-11T02:45:00","value":30.625},{"time":"2026-04-11T03:00:00","value":40.5},{"time":"2026-04-11T03:15:00","value":21.57812}],"targets":[{"minutes":15,"time":"2026-04-11T03:30:00","actual":25.12,"prediction":23.73897,"persistence":21.57812,"recentMean":33.764016},{"minutes":30,"time":"2026-04-11T03:45:00","actual":33.125,"prediction":24.78207,"persistence":21.57812,"recentMean":33.764016},{"minutes":45,"time":"2026-04-11T04:00:00","actual":30.09524,"prediction":25.89936,"persistence":21.57812,"recentMean":33.764016},{"minutes":60,"time":"2026-04-11T04:15:00","actual":34.61538,"prediction":24.342316,"persistence":21.57812,"recentMean":33.764016}]},{"id":"forecast-29","site":"Booth Site090","origin":"2026-04-05T15:15:00","history":[{"time":"2026-04-05T09:30:00","value":48.152504},{"time":"2026-04-05T09:45:00","value":43.424659},{"time":"2026-04-05T10:00:00","value":47.010365},{"time":"2026-04-05T10:15:00","value":45.341723},{"time":"2026-04-05T10:30:00","value":49.004686},{"time":"2026-04-05T10:45:00","value":41.076209},{"time":"2026-04-05T11:00:00","value":48.529464},{"time":"2026-04-05T11:15:00","value":41.649149},{"time":"2026-04-05T11:30:00","value":42.584282},{"time":"2026-04-05T11:45:00","value":41.991623},{"time":"2026-04-05T12:00:00","value":41.69974},{"time":"2026-04-05T12:15:00","value":38.098135},{"time":"2026-04-05T12:30:00","value":39.128757},{"time":"2026-04-05T12:45:00","value":43.402442},{"time":"2026-04-05T13:00:00","value":47.12152},{"time":"2026-04-05T13:15:00","value":45.27333},{"time":"2026-04-05T13:30:00","value":45.089949},{"time":"2026-04-05T13:45:00","value":42.106355},{"time":"2026-04-05T14:00:00","value":42.238912},{"time":"2026-04-05T14:15:00","value":38.363865},{"time":"2026-04-05T14:30:00","value":43.070672},{"time":"2026-04-05T14:45:00","value":43.096774},{"time":"2026-04-05T15:00:00","value":40.322422},{"time":"2026-04-05T15:15:00","value":38.515594}],"targets":[{"minutes":15,"time":"2026-04-05T15:30:00","actual":35.25324,"prediction":38.91848,"persistence":38.515594,"recentMean":41.251367},{"minutes":30,"time":"2026-04-05T15:45:00","actual":43.77598,"prediction":38.965316,"persistence":38.515594,"recentMean":41.251367},{"minutes":45,"time":"2026-04-05T16:00:00","actual":42.58515,"prediction":38.856305,"persistence":38.515594,"recentMean":41.251367},{"minutes":60,"time":"2026-04-05T16:15:00","actual":45.588414,"prediction":39.162066,"persistence":38.515594,"recentMean":41.251367}]},{"id":"forecast-30","site":"Booth Site011","origin":"2026-04-12T17:30:00","history":[{"time":"2026-04-12T11:45:00","value":48.11667},{"time":"2026-04-12T12:00:00","value":44.13462},{"time":"2026-04-12T12:15:00","value":48.08824},{"time":"2026-04-12T12:30:00","value":44.57895},{"time":"2026-04-12T12:45:00","value":43.375},{"time":"2026-04-12T13:00:00","value":38.55556},{"time":"2026-04-12T13:15:00","value":44.66327},{"time":"2026-04-12T13:30:00","value":49.95652},{"time":"2026-04-12T13:45:00","value":45.56522},{"time":"2026-04-12T14:00:00","value":42.125},{"time":"2026-04-12T14:15:00","value":52.85},{"time":"2026-04-12T14:30:00","value":51.26562},{"time":"2026-04-12T14:45:00","value":50.84314},{"time":"2026-04-12T15:00:00","value":35.25},{"time":"2026-04-12T15:15:00","value":34.4},{"time":"2026-04-12T15:30:00","value":35.375},{"time":"2026-04-12T15:45:00","value":35.15385},{"time":"2026-04-12T16:00:00","value":42.7},{"time":"2026-04-12T16:15:00","value":44.90385},{"time":"2026-04-12T16:30:00","value":39.07895},{"time":"2026-04-12T16:45:00","value":43.35417},{"time":"2026-04-12T17:00:00","value":33.76667},{"time":"2026-04-12T17:15:00","value":32.44444},{"time":"2026-04-12T17:30:00","value":51.04167}],"targets":[{"minutes":15,"time":"2026-04-12T17:45:00","actual":48.125,"prediction":47.8834,"persistence":51.04167,"recentMean":40.15174},{"minutes":30,"time":"2026-04-12T18:00:00","actual":39.64706,"prediction":47.241734,"persistence":51.04167,"recentMean":40.15174},{"minutes":45,"time":"2026-04-12T18:15:00","actual":53.81667,"prediction":47.272156,"persistence":51.04167,"recentMean":40.15174},{"minutes":60,"time":"2026-04-12T18:30:00","actual":50.6,"prediction":44.79303,"persistence":51.04167,"recentMean":40.15174}]},{"id":"forecast-31","site":"Booth Site043","origin":"2026-04-08T19:00:00","history":[{"time":"2026-04-08T13:15:00","value":40.944446},{"time":"2026-04-08T13:30:00","value":38.977777},{"time":"2026-04-08T13:45:00","value":43.163306},{"time":"2026-04-08T14:00:00","value":32.534591},{"time":"2026-04-08T14:15:00","value":40.061293},{"time":"2026-04-08T14:30:00","value":35.728336},{"time":"2026-04-08T14:45:00","value":42.894929},{"time":"2026-04-08T15:00:00","value":37.56169},{"time":"2026-04-08T15:15:00","value":38.1769},{"time":"2026-04-08T15:30:00","value":37.02794},{"time":"2026-04-08T15:45:00","value":39.627075},{"time":"2026-04-08T16:00:00","value":37.923499},{"time":"2026-04-08T16:15:00","value":45.06167},{"time":"2026-04-08T16:30:00","value":41.412369},{"time":"2026-04-08T16:45:00","value":38.723822},{"time":"2026-04-08T17:00:00","value":40.213099},{"time":"2026-04-08T17:15:00","value":41.51591},{"time":"2026-04-08T17:30:00","value":37.075843},{"time":"2026-04-08T17:45:00","value":31.001258},{"time":"2026-04-08T18:00:00","value":41.672797},{"time":"2026-04-08T18:15:00","value":34.67715},{"time":"2026-04-08T18:30:00","value":44.368397},{"time":"2026-04-08T18:45:00","value":47.280374},{"time":"2026-04-08T19:00:00","value":42.876552}],"targets":[{"minutes":15,"time":"2026-04-08T19:15:00","actual":42.725,"prediction":39.85996,"persistence":42.87655,"recentMean":42.300617},{"minutes":30,"time":"2026-04-08T19:30:00","actual":40.158414,"prediction":38.162523,"persistence":42.87655,"recentMean":42.300617},{"minutes":45,"time":"2026-04-08T19:45:00","actual":34.540344,"prediction":37.65557,"persistence":42.87655,"recentMean":42.300617},{"minutes":60,"time":"2026-04-08T20:00:00","actual":39.718023,"prediction":35.799883,"persistence":42.87655,"recentMean":42.300617}]},{"id":"forecast-32","site":"Booth Site140","origin":"2026-04-15T09:00:00","history":[{"time":"2026-04-15T03:15:00","value":52.843913},{"time":"2026-04-15T03:30:00","value":49.91962},{"time":"2026-04-15T03:45:00","value":57.60439},{"time":"2026-04-15T04:00:00","value":49.002505},{"time":"2026-04-15T04:15:00","value":52.951189},{"time":"2026-04-15T04:30:00","value":57.734849},{"time":"2026-04-15T04:45:00","value":58.666001},{"time":"2026-04-15T05:00:00","value":65.480838},{"time":"2026-04-15T05:15:00","value":60.263568},{"time":"2026-04-15T05:30:00","value":54.504719},{"time":"2026-04-15T05:45:00","value":51.531592},{"time":"2026-04-15T06:00:00","value":57.444041},{"time":"2026-04-15T06:15:00","value":49.464731},{"time":"2026-04-15T06:30:00","value":53.108119},{"time":"2026-04-15T06:45:00","value":50.910864},{"time":"2026-04-15T07:00:00","value":52.565229},{"time":"2026-04-15T07:15:00","value":53.483297},{"time":"2026-04-15T07:30:00","value":58.812863},{"time":"2026-04-15T07:45:00","value":64.799575},{"time":"2026-04-15T08:00:00","value":60.181463},{"time":"2026-04-15T08:15:00","value":51.114591},{"time":"2026-04-15T08:30:00","value":48.665528},{"time":"2026-04-15T08:45:00","value":57.976451},{"time":"2026-04-15T09:00:00","value":54.588666}],"targets":[{"minutes":15,"time":"2026-04-15T09:15:00","actual":54.306527,"prediction":54.529566,"persistence":54.588668,"recentMean":53.08631},{"minutes":30,"time":"2026-04-15T09:30:00","actual":53.955438,"prediction":54.240707,"persistence":54.588668,"recentMean":53.08631},{"minutes":45,"time":"2026-04-15T09:45:00","actual":54.772098,"prediction":54.01552,"persistence":54.588668,"recentMean":53.08631},{"minutes":60,"time":"2026-04-15T10:00:00","actual":46.949215,"prediction":53.780465,"persistence":54.588668,"recentMean":53.08631}]}]};
+
+</script>
+  <script src="scoreboard-config.js"></script>
+  <script>
+/* Shared scoreboard client. No account or external JavaScript SDK is required. */
+(function () {
+  'use strict';
+
+  const CHALLENGE = 'endeavour-2026-v1';
+  const PREFIX = 'endeavour.forecast.pending.v1.';
+  const TIMEOUT = 10000;
+  const MAX_BATCH = 10;
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const memory = new Map();
+  const successful = new Map();
+  const inFlight = new Map();
+  const listeners = new Set();
+  let networkTail = Promise.resolve();
+  let flushing = null;
+  let refreshing = null;
+  let retryTimer = null;
+  let retryNotBefore = 0;
+
+  function error(code, message, retryable) {
+    return Object.assign(new Error(message), { code, retryable: !!retryable });
+  }
+
+  function config() {
+    const source = window.BOOTH_SCOREBOARD_CONFIG || {};
+    const url = typeof source.url === 'string' ? source.url.trim() : '';
+    const key = typeof source.publishableKey === 'string' ? source.publishableKey.trim() : '';
+    if (!url || !key) {
+      throw error('NOT_CONFIGURED', 'The shared scoreboard has not been connected yet.', true);
+    }
+    let target;
+    try { target = new URL(url); } catch (_) {
+      throw error('INVALID_CONFIG', 'The scoreboard project URL is not valid.', false);
+    }
+    const localHost = hostname => ['localhost', '127.0.0.1', '[::1]'].includes(hostname);
+    const localPage = location.protocol === 'file:' || localHost(location.hostname);
+    const supabase = target.protocol === 'https:' && /^[a-z0-9-]+\.supabase\.co$/i.test(target.hostname) && !target.port;
+    const localTest = localPage && localHost(target.hostname) && ['http:', 'https:'].includes(target.protocol);
+    if ((!supabase && !localTest) || target.username || target.password ||
+        target.search || target.hash || !['', '/'].includes(target.pathname)) {
+      throw error('INVALID_CONFIG', 'Use the HTTPS Supabase project URL, without a path.', false);
+    }
+    let publicKey = /^sb_publishable_[A-Za-z0-9_-]+$/.test(key);
+    if (!publicKey && key.split('.').length === 3) {
+      try {
+        const payload = key.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const claims = JSON.parse(atob(payload.padEnd(Math.ceil(payload.length / 4) * 4, '=')));
+        publicKey = claims.role === 'anon';
+      } catch (_) { /* Reject malformed or privileged JWTs. */ }
+    }
+    if (!publicKey) {
+      throw error('INVALID_CONFIG', 'Use a public publishable or legacy anon key. Secret keys are not allowed.', false);
+    }
+    return { url: target.origin, key };
+  }
+
+  function configured() {
+    try { config(); return true; } catch (_) { return false; }
+  }
+
+  function normalize(record) {
+    if (!record || !UUID.test(record.submissionId) || record.challengeId !== CHALLENGE ||
+        typeof record.name !== 'string' || !record.name.trim() ||
+        Array.from(record.name).length > 24 || /[\u0000-\u001f\u007f]/.test(record.name) ||
+        !Array.isArray(record.guesses) || record.guesses.length !== 3 ||
+        record.guesses.some(value => typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1000000)) {
+      throw error('INVALID_SUBMISSION', 'Enter a nickname and complete all three predictions before saving.', false);
+    }
+    return {
+      submissionId: record.submissionId.toLowerCase(),
+      challengeId: CHALLENGE,
+      name: record.name.trim(),
+      guesses: record.guesses.slice(),
+      created: typeof record.created === 'string' ? record.created : new Date().toISOString()
+    };
+  }
+
+  function createSubmission(name, guesses) {
+    let id;
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      id = window.crypto.randomUUID();
+    } else {
+      const bytes = new Uint8Array(16);
+      window.crypto.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 15) | 64;
+      bytes[8] = (bytes[8] & 63) | 128;
+      const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+      id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+    }
+    return normalize({
+      submissionId: id,
+      challengeId: CHALLENGE,
+      name: typeof name === 'string' ? name.trim().replace(/\s+/g, ' ') : name,
+      guesses,
+      created: new Date().toISOString()
+    });
+  }
+
+  function emit(event) {
+    listeners.forEach(listener => {
+      try { listener(event); } catch (_) { /* A view listener cannot interrupt saving. */ }
+    });
+  }
+
+  function remember(entry) {
+    memory.set(entry.record.submissionId, entry);
+    try {
+      localStorage.setItem(PREFIX + entry.record.submissionId, JSON.stringify({
+        record: entry.record,
+        attempts: entry.attempts,
+        retryAt: entry.retryAt,
+        blocked: entry.blocked
+      }));
+      entry.durable = true;
+    } catch (_) {
+      entry.durable = false;
+    }
+    return entry;
+  }
+
+  function readPending() {
+    try {
+      for (let index = 0; index < localStorage.length; index++) {
+        const key = localStorage.key(index);
+        if (!key || !key.startsWith(PREFIX)) continue;
+        try {
+          const raw = JSON.parse(localStorage.getItem(key));
+          const record = normalize(raw.record);
+          if (key !== PREFIX + record.submissionId || successful.has(record.submissionId)) continue;
+          if (!memory.has(record.submissionId)) {
+            memory.set(record.submissionId, {
+              record,
+              attempts: Number.isFinite(raw.attempts) ? Math.max(0, raw.attempts) : 0,
+              retryAt: Number.isFinite(raw.retryAt) ? raw.retryAt : 0,
+              blocked: raw.blocked === true,
+              durable: true
+            });
+          }
+        } catch (_) { /* Leave unreadable records untouched, rather than deleting data. */ }
+      }
+    } catch (_) { /* Memory queue still works when browser storage is unavailable. */ }
+    return Array.from(memory.values()).sort((a, b) => a.record.created.localeCompare(b.record.created));
+  }
+
+  function isDurable(recordOrId) {
+    const id = typeof recordOrId === 'string' ? recordOrId : recordOrId && recordOrId.submissionId;
+    readPending();
+    return !!(memory.get(id) && memory.get(id).durable);
+  }
+
+  function pendingCount() { return readPending().length; }
+
+  function scheduleRetry() {
+    clearTimeout(retryTimer);
+    retryTimer = null;
+    if (!configured() || navigator.onLine === false || document.visibilityState === 'hidden') return;
+    const pending = readPending().filter(entry => !entry.blocked && !inFlight.has(entry.record.submissionId));
+    if (!pending.length) return;
+    const next = pending.reduce((earliest, entry) => Math.min(earliest, entry.retryAt || 0), Infinity);
+    retryTimer = setTimeout(() => { flush(); }, Math.max(1000, Math.max(next, retryNotBefore) - Date.now()));
+  }
+
+  async function request(method, payload) {
+    const settings = config();
+    const controller = new AbortController();
+    let timer;
+    try {
+      return await Promise.race([
+        (async () => {
+          const response = await fetch(`${settings.url}/rest/v1/rpc/${method}`, {
+            method: 'POST',
+            headers: { apikey: settings.key, 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+            credentials: 'omit',
+            cache: 'no-store',
+            referrerPolicy: 'no-referrer'
+          });
+          if (!response.ok) {
+            const retryable = response.status === 408 || response.status === 429 || response.status >= 500;
+            const message = response.status === 429
+              ? 'The scoreboard is busy. Your score will be retried shortly.'
+              : 'The scoreboard could not accept the request. Please try again.';
+            throw Object.assign(error('SERVER_ERROR', message, retryable), { status: response.status });
+          }
+          try { return await response.json(); } catch (_) {
+            throw error('INVALID_RESPONSE', 'The scoreboard returned an unreadable response.', true);
+          }
+        })(),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            reject(error('TIMEOUT', 'The scoreboard took too long to respond. Please try again.', true));
+            controller.abort();
+          }, TIMEOUT);
+        })
+      ]);
+    } catch (failure) {
+      if (failure && failure.code) throw failure;
+      throw error('NETWORK_ERROR', 'Unable to reach the shared scoreboard. Please check your connection.', true);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function validMetric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+
+  function savedResponse(value, id) {
+    if (!value || value.submissionId !== id || !validMetric(value.mae) || !validMetric(value.aiMae) ||
+        !Number.isInteger(value.rank) || value.rank < 1) {
+      throw error('INVALID_RESPONSE', 'The scoreboard returned an unexpected score. Saving will be retried.', true);
+    }
+    return { submissionId: id, mae: value.mae, aiMae: value.aiMae, rank: value.rank };
+  }
+
+  async function send(entry) {
+    const record = entry.record;
+    // Attempt persistence again in case browser storage became available.
+    remember(entry);
+    emit({ type: 'pending', submissionId: record.submissionId, durable: entry.durable });
+    try {
+      const result = savedResponse(await request('submit_game_score', {
+        p_submission_id: record.submissionId,
+        p_challenge_id: record.challengeId,
+        p_nickname: record.name,
+        p_guesses: record.guesses
+      }), record.submissionId);
+      retryNotBefore = 0;
+      successful.set(record.submissionId, result);
+      memory.delete(record.submissionId);
+      try { localStorage.removeItem(PREFIX + record.submissionId); } catch (_) { /* Retrying the same ID remains safe. */ }
+      emit(Object.assign({ type: 'saved' }, result));
+      return result;
+    } catch (failure) {
+      entry.attempts++;
+      entry.retryAt = Date.now() + Math.min(300000, 5000 * Math.pow(2, Math.min(6, entry.attempts - 1)));
+      if (failure.retryable) retryNotBefore = entry.retryAt;
+      entry.blocked = !failure.retryable && failure.code !== 'INVALID_CONFIG';
+      remember(entry);
+      failure.submissionId = record.submissionId;
+      failure.durable = entry.durable;
+      emit({ type: 'error', submissionId: record.submissionId, durable: entry.durable, error: failure });
+      throw failure;
+    }
+  }
+
+  function attempt(entry) {
+    const id = entry.record.submissionId;
+    if (inFlight.has(id)) return inFlight.get(id);
+    // Serial writes bound network usage even if several finished games are queued.
+    const job = networkTail.then(() => send(entry));
+    networkTail = job.catch(() => {});
+    const completion = job.finally(() => {
+      inFlight.delete(id);
+      scheduleRetry();
+    });
+    inFlight.set(id, completion);
+    return completion;
+  }
+
+  function submit(record) {
+    let clean;
+    try { clean = normalize(record); } catch (failure) { return Promise.reject(failure); }
+    if (successful.has(clean.submissionId)) return Promise.resolve(successful.get(clean.submissionId));
+    readPending();
+    const existing = memory.get(clean.submissionId);
+    if (existing && (existing.record.name !== clean.name ||
+        JSON.stringify(existing.record.guesses) !== JSON.stringify(clean.guesses))) {
+      return Promise.reject(error('INVALID_SUBMISSION', 'A saved game cannot be changed when retrying it.', false));
+    }
+    const entry = existing || remember({ record: clean, attempts: 0, retryAt: 0, blocked: false, durable: false });
+    entry.blocked = false;
+    return attempt(entry);
+  }
+
+  function flush() {
+    if (flushing) return flushing;
+    flushing = (async () => {
+      let saved = 0;
+      if (!configured() || navigator.onLine === false || Date.now() < retryNotBefore) {
+        return { saved, pending: pendingCount() };
+      }
+      const candidates = readPending().filter(entry => !entry.blocked && entry.retryAt <= Date.now()).slice(0, MAX_BATCH);
+      for (const entry of candidates) {
+        try { await attempt(entry); saved++; } catch (failure) {
+          // Pause this batch during an outage; keep every remaining game queued.
+          if (failure.retryable || failure.code === 'INVALID_CONFIG') break;
+        }
+      }
+      return { saved, pending: pendingCount() };
+    })().finally(() => {
+      flushing = null;
+      scheduleRetry();
+    });
+    return flushing;
+  }
+
+  function retryPending() {
+    // A visitor can retry retained 4xx failures after the owner fixes deployment.
+    // Failed retries become blocked again, avoiding an automatic error loop.
+    retryNotBefore = 0;
+    readPending().forEach(entry => {
+      entry.blocked = false;
+      entry.retryAt = 0;
+      remember(entry);
+    });
+    return flush();
+  }
+
+  function refresh() {
+    if (refreshing) return refreshing;
+    refreshing = request('get_game_leaderboard', { p_challenge_id: CHALLENGE }).then(value => {
+      if (!value || !Array.isArray(value.scores) || !Number.isInteger(value.total) || value.total < 0 ||
+          !validMetric(value.aiMae) || value.scores.some(score =>
+            !score || typeof score.name !== 'string' || !validMetric(score.mae) || !validMetric(score.aiMae) ||
+            typeof score.created !== 'string' || !Number.isInteger(score.rank) || score.rank < 1)) {
+        throw error('INVALID_RESPONSE', 'The shared scoreboard returned an unexpected result.', true);
+      }
+      return {
+        scores: value.scores.map(score => ({
+          name: score.name, mae: score.mae, aiMae: score.aiMae, created: score.created, rank: score.rank
+        })),
+        total: value.total,
+        aiMae: value.aiMae
+      };
+    }).finally(() => { refreshing = null; });
+    return refreshing;
+  }
+
+  function subscribe(listener) {
+    if (typeof listener !== 'function') throw new TypeError('A scoreboard listener must be a function.');
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  }
+
+  window.BoothScoreboard = Object.freeze({
+    configured, createSubmission, submit, refresh, flush, retryPending, pendingCount, isDurable, subscribe
+  });
+  window.addEventListener('online', () => { flush(); });
+  window.addEventListener('storage', event => {
+    if (event.key && event.key.startsWith(PREFIX)) {
+      if (!event.newValue) memory.delete(event.key.slice(PREFIX.length));
+      scheduleRetry();
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'hidden') flush();
+  });
+  setTimeout(() => { flush(); }, 0);
+})();
+
+</script>
+  <script>
+/* Static forecasting game with a shared scoreboard. */
+(function () {
+  'use strict';
+  const ROUND_COUNT = 3;
+  const CASE_IDS = ['forecast-01', 'forecast-02', 'forecast-03'];
+  const NS = 'http://www.w3.org/2000/svg';
+  const money = value => Number(value).toFixed(2);
+  const finite = value => typeof value === 'number' && Number.isFinite(value);
+  const number = value => typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN;
+  const safeText = value => String(value == null ? '' : value);
+  let root, ui = {}, data, available = [], chosen = [], rounds = [], roundIndex = 0;
+  const horizon = 30;
+  let phase = 'ready', current = null, target = null, chartState = null;
+  let active = false, submission = null, playerName = '', boardLoaded = false, boardBusy = false, pendingBusy = false;
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  function append(parent, ...children) { children.forEach(child => parent.appendChild(child)); return parent; }
+  function svg(tag, attrs, text) {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs || {}).forEach(([key, value]) => node.setAttribute(key, value));
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  function setHidden(node, value) { node.hidden = value; }
+  function dateText(value, full) {
+    // Display the recorded timestamp as supplied, without applying a browser timezone shift.
+    const match = safeText(value).match(/(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+    if (match) return full ? `${match[3]}/${match[2]}/${match[1]} · ${match[4]}:${match[5]}` : `${match[4]}:${match[5]}`;
+    return safeText(value) || 'Recorded time';
+  }
+  function niceMax(value) {
+    const raw = Math.max(value, 1), power = Math.pow(10, Math.floor(Math.log10(raw)));
+    return Math.ceil(raw / power * 2) / 2 * power;
+  }
+  function validateData() {
+    data = window.BOOTH_GAME_DATA || {};
+    const ids = new Set();
+    available = (Array.isArray(data.cases) ? data.cases : []).filter(item => {
+      if (!item || ids.has(item.id) || !Array.isArray(item.history) || item.history.length < 2 || !Array.isArray(item.targets)) return false;
+      if (!item.history.every(point => point && finite(number(point.value)) && number(point.value) >= 0)) return false;
+      ids.add(item.id);
+      return item.targets.some(point => [15, 30, 45, 60].includes(number(point.minutes)) && finite(number(point.actual)) && finite(number(point.prediction)));
+    });
+  }
+  function candidates() {
+    return CASE_IDS.map(id => available.find(item => item.id === id))
+      .filter(item => item && item.targets.some(point => number(point.minutes) === horizon && finite(number(point.actual)) && finite(number(point.prediction))));
+  }
+  function announce(message) { ui.live.textContent = message; }
+  function updateStart() {
+    const total = candidates().length;
+    ui.start.disabled = total < ROUND_COUNT;
+    ui.poolNote.textContent = total >= ROUND_COUNT
+      ? 'Everyone plays the same three rounds, predicting 30 minutes ahead. Lowest average error wins.'
+      : 'This challenge could not load. Please refresh and try again.';
+  }
+  function start() {
+    const pool = candidates();
+    if (pool.length < ROUND_COUNT) return;
+    chosen = pool; rounds = []; roundIndex = 0; submission = null;
+    playerName = Array.from(ui.nickname.value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim()).slice(0, 24).join('') || 'Anonymous visitor';
+    root.classList.add('game-session');
+    ui.save.hidden = true; ui.saveStatus.textContent = '';
+    setHidden(ui.intro, true); setHidden(ui.finish, true); setHidden(ui.play, false);
+    startRound();
+  }
+  function startRound() {
+    current = chosen[roundIndex];
+    target = current.targets.find(point => number(point.minutes) === horizon);
+    phase = 'guessing';
+    ui.round.textContent = `Round ${roundIndex + 1} of ${ROUND_COUNT}`;
+    ui.site.textContent = `${safeText(current.site)} · ${dateText(current.origin, true)}`;
+    ui.question.textContent = `What will throughput be ${horizon} minutes later?`;
+    ui.last.textContent = `${money(number(current.history[current.history.length - 1].value))} Mbps`;
+    ui.guess.value = '';
+    ui.guess.disabled = false; ui.slider.disabled = false; ui.lock.disabled = false;
+    ui.slider.value = Math.max(0, number(current.history[current.history.length - 1].value));
+    ui.guessError.textContent = '';
+    setHidden(ui.form, false); setHidden(ui.progress, false);
+    ui.progress.textContent = rounds.length ? `Your average error so far: ${money(mean(rounds.map(item => item.humanError)))} Mbps` : 'Read the recent history, then make your best guess.';
+    setHidden(ui.reveal, true); setHidden(ui.next, true); setHidden(ui.lock, false);
+    renderChart(false);
+    ui.slider.max = chartState.max;
+    ui.slider.value = Math.min(chartState.max, number(current.history[current.history.length - 1].value));
+    ui.slider.setAttribute('aria-valuetext', `${money(Number(ui.slider.value))} Mbps`);
+    announce(`Round ${roundIndex + 1}. Predict throughput ${horizon} minutes ahead. Last measurement ${ui.last.textContent}.`);
+    if (active) { root.scrollIntoView({ block: 'start' }); ui.question.focus({ preventScroll: true }); }
+  }
+  function mean(values) { return values.reduce((sum, value) => sum + value, 0) / values.length; }
+  function formatGuess() {
+    if (phase !== 'guessing') return;
+    const value = Number(ui.guess.value);
+    const valid = ui.guess.value.trim() !== '' && Number.isFinite(value) && value >= 0 && value <= 1000000;
+    if (valid) {
+      ui.slider.value = Math.min(value, Number(ui.slider.max));
+      ui.slider.setAttribute('aria-valuetext', `${money(value)} Mbps`);
+    }
+    renderGuess(valid ? value : null);
+    ui.guessError.textContent = '';
+  }
+  function lockGuess(event) {
+    if (event) event.preventDefault();
+    if (phase !== 'guessing') return;
+    const guess = Number(ui.guess.value);
+    if (!ui.guess.value.trim() || !Number.isFinite(guess) || guess < 0 || guess > 1000000) {
+      ui.guessError.textContent = 'Enter a number from 0 to 1,000,000 Mbps.';
+      ui.guess.focus(); return;
+    }
+    const actual = number(target.actual), prediction = number(target.prediction);
+    const persistence = finite(number(target.persistence)) ? number(target.persistence) : number(current.history[current.history.length - 1].value);
+    const record = { caseId: current.id, guess, actual, prediction, persistence, humanError: Math.abs(guess - actual), aiError: Math.abs(prediction - actual), persistenceError: Math.abs(persistence - actual) };
+    rounds.push(record); phase = 'revealed';
+    if (rounds.length === ROUND_COUNT) saveScore();
+    ui.guess.disabled = true; ui.slider.disabled = true; ui.lock.disabled = true;
+    setHidden(ui.form, true); setHidden(ui.progress, true);
+    setHidden(ui.lock, true); setHidden(ui.reveal, false); setHidden(ui.next, false);
+    ui.next.textContent = roundIndex === ROUND_COUNT - 1 ? 'See your final score →' : 'Next round →';
+    const difference = record.humanError - record.aiError;
+    ui.revealTitle.textContent = Math.abs(difference) < 0.005 ? 'A photo finish — it’s a tie!' : difference < 0 ? 'You were closer this round!' : 'The AI was closer this round.';
+    ui.actual.textContent = `${money(actual)} Mbps`;
+    ui.humanValue.textContent = `${money(guess)} Mbps`; ui.humanError.textContent = `${money(record.humanError)} Mbps error`;
+    ui.aiValue.textContent = `${money(prediction)} Mbps`; ui.aiError.textContent = `${money(record.aiError)} Mbps error`;
+    ui.baselineValue.textContent = `${money(persistence)} Mbps`; ui.baselineError.textContent = `${money(record.persistenceError)} Mbps error`;
+    ui.explanation.textContent = 'Error is the distance from the recorded outcome. The “last value” baseline simply repeats the latest measurement.';
+    renderChart(true);
+    announce(`${ui.revealTitle.textContent} Recorded outcome ${money(actual)} Mbps. Your error ${money(record.humanError)} Mbps. AI error ${money(record.aiError)} Mbps.`);
+    ui.revealTitle.focus();
+  }
+  function nextRound() {
+    if (phase !== 'revealed') return;
+    if (roundIndex < ROUND_COUNT - 1) { roundIndex++; startRound(); }
+    else finish();
+  }
+  function finish() {
+    phase = 'finished'; setHidden(ui.play, true); setHidden(ui.finish, false);
+    const human = mean(rounds.map(row => row.humanError)), ai = mean(rounds.map(row => row.aiError)), baseline = mean(rounds.map(row => row.persistenceError));
+    ui.finishTitle.textContent = Math.abs(human - ai) < 0.005 ? 'A draw. Nicely predicted!' : human < ai ? 'You beat the AI this time!' : 'The AI takes this challenge.';
+    ui.finalHuman.textContent = `${money(human)} Mbps`;
+    ui.finalAi.textContent = `${money(ai)} Mbps`;
+    ui.finalBaseline.textContent = `${money(baseline)} Mbps`;
+    ui.finishDetail.textContent = `Mean absolute error across your three ${horizon}-minute forecasts. This short game is a demonstration; it is not an overall model evaluation.`;
+    ui.roundTable.replaceChildren();
+    rounds.forEach((row, index) => {
+      const tr = element('tr');
+      [String(index + 1), money(row.humanError), money(row.aiError), money(row.persistenceError)].forEach(value => tr.appendChild(element('td', '', value)));
+      ui.roundTable.appendChild(tr);
+    });
+    refreshLeaderboard();
+    announce(`${ui.finishTitle.textContent} Your mean absolute error ${money(human)} Mbps. AI mean absolute error ${money(ai)} Mbps.`);
+    ui.finishTitle.focus();
+  }
+  function reset() {
+    phase = 'ready'; rounds = []; chosen = []; current = target = null;
+    root.classList.remove('game-session');
+    setHidden(ui.intro, false); setHidden(ui.play, true); setHidden(ui.finish, true);
+    ui.nickname.value = '';
+    submission = null;
+    ui.live.textContent = ''; updateStart();
+    if (active) { root.scrollIntoView({ block: 'start' }); ui.start.focus({ preventScroll: true }); }
+  }
+  function pendingMessage(error, durable) {
+    const disconnected = ['NOT_CONFIGURED', 'INVALID_CONFIG'].includes(error?.code);
+    const rejected = error && !error.retryable && !disconnected;
+    const reason = disconnected ? 'The shared scoreboard is not connected yet.'
+      : rejected ? 'The scoreboard could not accept your score. Use Retry saving score to try again.'
+      : 'Your score has not reached the scoreboard yet.';
+    return `${reason} ${durable
+      ? disconnected ? 'Your score is saved on this device, ready to upload once connected.'
+        : rejected ? 'Your score remains saved on this device.'
+        : 'It is saved on this device and will retry automatically while the game is open.'
+      : 'Keep this page open; this browser cannot save pending scores.'}`;
+  }
+  async function saveScore() {
+    if (rounds.length !== ROUND_COUNT) return;
+    const client = window.BoothScoreboard;
+    try {
+      if (!submission) submission = client.createSubmission(playerName, rounds.map(row => row.guess));
+    } catch (_) {
+      ui.saveStatus.textContent = 'Your score could not be prepared for saving. Keep this page open and try again.';
+      ui.save.hidden = false;
+      return;
+    }
+    const pending = submission;
+    ui.save.hidden = true;
+    ui.saveStatus.textContent = 'Saving your score…';
+    try {
+      await client.submit(pending);
+      if (submission === pending) {
+        ui.saveStatus.textContent = 'Your score is saved on the shared scoreboard.';
+        ui.save.hidden = true;
+      }
+      refreshLeaderboard();
+    } catch (error) {
+      if (submission !== pending) return;
+      ui.saveStatus.textContent = pendingMessage(error, client.isDurable(pending));
+      ui.save.hidden = false;
+    }
+  }
+  function renderLeaderboard(result) {
+    boardLoaded = true;
+    const scores = result.scores;
+    ui.leaderRows.replaceChildren();
+    ui.leaderEmpty.hidden = scores.length > 0;
+    ui.leaderTable.hidden = scores.length === 0;
+    ui.leaderEmpty.textContent = 'No scores yet. Play three rounds to set the first score.';
+    ui.leaderMeta.textContent = `${result.total.toLocaleString()} completed ${result.total === 1 ? 'game' : 'games'} · AI average error: ${money(result.aiMae)} Mbps`;
+    scores.forEach((row, index) => {
+      const tr = element('tr');
+      [String(row.rank || index + 1), safeText(row.name), money(row.mae)].forEach(value => tr.appendChild(element('td', '', value)));
+      ui.leaderRows.appendChild(tr);
+    });
+  }
+  function updatePending() {
+    const count = window.BoothScoreboard.pendingCount();
+    ui.pendingNote.textContent = count ? `${count} ${count === 1 ? 'score is' : 'scores are'} waiting to upload from this browser.` : '';
+    ui.pendingNote.hidden = count === 0;
+    ui.retryPending.hidden = count === 0;
+    ui.retryPending.disabled = pendingBusy || !window.BoothScoreboard.configured();
+  }
+  async function refreshLeaderboard() {
+    if (boardBusy || !ui.leaderRows) return;
+    if (!window.BoothScoreboard.configured()) {
+      ui.leaderStatus.textContent = 'The shared scoreboard is not connected yet. You can still play.';
+      return;
+    }
+    boardBusy = true; ui.refresh.disabled = true;
+    ui.leaderStatus.textContent = 'Updating scores…';
+    try {
+      renderLeaderboard(await window.BoothScoreboard.refresh());
+      ui.leaderStatus.textContent = 'Up to date · refreshes every 30 seconds.';
+    } catch (_) {
+      ui.leaderStatus.textContent = boardLoaded
+        ? 'Unable to refresh. Showing the last received scores.'
+        : 'Unable to reach the scoreboard. Check your connection and try Refresh.';
+    } finally { boardBusy = false; ui.refresh.disabled = false; }
+  }
+  function renderChart(revealed) {
+    const points = current.history.map(point => number(point.value));
+    const record = revealed ? rounds[rounds.length - 1] : null;
+    const historyMax = niceMax(Math.max(...points) * 1.2);
+    // Future values are deliberately excluded before the visitor locks in a guess.
+    const max = revealed ? niceMax(Math.max(historyMax, record.actual * 1.1, record.prediction * 1.1, record.guess * 1.1)) : historyMax;
+    // Size the drawing to its container so text stays readable on a phone.
+    const W = Math.max(240, Math.min(980, ui.chart.clientWidth || 980));
+    const compact = W < 600;
+    const H = compact ? 300 : 340, L = compact ? 52 : 80, R = compact ? 20 : 32, T = 35, B = 62;
+    const width = W - L - R, height = H - T - B;
+    const measuredHistoryMinutes = (Date.parse(current.origin) - Date.parse(current.history[0].time)) / 60000;
+    const historyMinutes = Number.isFinite(measuredHistoryMinutes) && measuredHistoryMinutes > 0 ? measuredHistoryMinutes : 345;
+    const originX = L + width * (historyMinutes / (historyMinutes + horizon));
+    const endX = W - R;
+    const yy = value => H - B - value / max * height;
+    const xx = index => L + index / (points.length - 1) * (originX - L);
+    const drawing = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', tabindex: '0', 'aria-label': `Recorded throughput history for site ${safeText(current.site)}. ${revealed ? 'Revealed forecast comparison.' : 'Future observations and the AI prediction are hidden. Use the labelled number field to enter your prediction.'}` });
+    append(drawing, svg('title', {}, revealed ? 'Forecast challenge: revealed outcome' : 'Forecast challenge: history only'));
+    append(drawing, svg('rect', { x: originX, y: T, width: endX - originX, height, fill: '#edf5fa' }));
+    for (let index = 0; index <= 4; index++) {
+      const value = max * index / 4, y = yy(value);
+      append(drawing, svg('line', { x1: L, x2: endX, y1: y, y2: y, stroke: '#dde6ed', 'stroke-width': 1 }));
+      const tickText = value.toLocaleString('en-AU', { maximumFractionDigits: 2, notation: compact && max >= 1000 ? 'compact' : 'standard' });
+      append(drawing, svg('text', { x: L - 12, y: y + 5, 'text-anchor': 'end', class: 'game-svg-axis' }, tickText));
+    }
+    append(drawing, svg('text', { x: L, y: 19, class: 'game-svg-unit' }, 'Throughput (Mbps)'));
+    append(drawing, svg('line', { x1: originX, x2: originX, y1: T, y2: H - B, stroke: '#a7bccd', 'stroke-dasharray': '5 5', 'stroke-width': 1.5 }));
+    const tickIndices = compact ? [0, points.length - 1] : [0, Math.round((points.length - 1) / 2), points.length - 1];
+    tickIndices.forEach((index, tick) => {
+      append(drawing, svg('text', { x: xx(index), y: H - B + 28, 'text-anchor': tick === tickIndices.length - 1 ? 'end' : tick === 0 ? 'start' : 'middle', class: 'game-svg-axis' }, dateText(current.history[index].time, false)));
+    });
+    append(drawing, svg('text', { x: endX, y: H - 7, 'text-anchor': 'end', class: 'game-svg-axis game-svg-future' }, `+${horizon} min`));
+    append(drawing, svg('text', { x: compact ? L : (L + originX) / 2, y: H - 7, 'text-anchor': compact ? 'start' : 'middle', class: 'game-svg-axis' }, compact ? 'Past 6 hours' : 'Recorded history · preceding 6 hours'));
+    append(drawing, svg('text', { x: endX, y: compact ? 19 : T + 20, 'text-anchor': 'end', class: 'game-svg-label' }, revealed ? 'REVEAL' : 'YOUR GUESS'));
+    const path = points.map((value, index) => `${index ? 'L' : 'M'}${xx(index).toFixed(2)},${yy(value).toFixed(2)}`).join(' ');
+    append(drawing, svg('path', { d: path, fill: 'none', stroke: '#183454', 'stroke-width': 3.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    append(drawing, svg('circle', { cx: originX, cy: yy(points[points.length - 1]), r: 5, fill: '#183454', stroke: '#fff', 'stroke-width': 2 }));
+    chartState = { drawing, max, yy, xx, endX, originX, T, B, H, W, guessGroup: svg('g', {}) };
+    if (revealed) {
+      append(drawing, svg('line', { x1: originX, x2: endX, y1: yy(points[points.length - 1]), y2: yy(record.actual), stroke: '#087e83', 'stroke-width': 2.5, 'stroke-dasharray': '5 4' }));
+      // Distinct shapes keep the comparisons legible without relying on colour alone.
+      append(drawing, svg('circle', { cx: endX, cy: yy(record.actual), r: 8, fill: '#087e83', stroke: '#fff', 'stroke-width': 2 }));
+      append(drawing, svg('path', { d: `M${endX},${yy(record.prediction) - 9} L${endX + 9},${yy(record.prediction)} L${endX},${yy(record.prediction) + 9} L${endX - 9},${yy(record.prediction)} Z`, fill: '#003f8b', stroke: '#fff', 'stroke-width': 1.5 }));
+      append(drawing, svg('path', { d: `M${endX - 7},${yy(record.guess) - 7} l14,14 m-14,0 l14,-14`, stroke: '#c66a3b', 'stroke-width': 4, fill: 'none' }));
+    }
+    append(drawing, chartState.guessGroup);
+    drawing.addEventListener('click', event => {
+      if (phase !== 'guessing') return;
+      const bounds = drawing.getBoundingClientRect();
+      const point = drawing.createSVGPoint(); point.x = event.clientX; point.y = event.clientY;
+      const matrix = drawing.getScreenCTM();
+      if (!matrix || !bounds.height) return;
+      const local = point.matrixTransform(matrix.inverse());
+      if (local.y < T || local.y > H - B) return;
+      const value = Math.max(0, Math.min(max, (H - B - local.y) / height * max));
+      ui.guess.value = value.toFixed(2); formatGuess();
+    });
+    ui.chart.replaceChildren(drawing);
+    ui.chartLegend.textContent = revealed ? '● Recorded history / outcome    ◆ AI forecast    × Your guess' : 'Tap the chart, move the slider, or type your guess.';
+    ui.axisNote.textContent = revealed && max > historyMax ? 'The vertical axis expanded after the reveal to fit the results.' : '';
+  }
+  function renderGuess(value) {
+    if (!chartState || phase !== 'guessing') return;
+    const { guessGroup, yy, endX, originX, max, T } = chartState;
+    guessGroup.replaceChildren();
+    if (value == null) return;
+    const y = yy(Math.min(max, value));
+    append(guessGroup, svg('line', { x1: originX, x2: endX, y1: y, y2: y, stroke: '#c66a3b', 'stroke-width': 2, 'stroke-dasharray': '5 4' }));
+    append(guessGroup, svg('path', { d: `M${endX - 7},${y - 7} l14,14 m-14,0 l14,-14`, stroke: '#c66a3b', 'stroke-width': 4, fill: 'none' }));
+    append(guessGroup, svg('text', { x: endX - 12, y: y < T + 35 ? y + 25 : y - 13, 'text-anchor': 'end', class: 'game-svg-guess' }, `${money(value)}${value > max ? ' ↑' : ''} Mbps`));
+  }
+  function card(label, valueClass, errorClass) {
+    const box = element('div', 'game-score-card');
+    const value = element('strong', valueClass, '—');
+    const error = errorClass ? element('span', errorClass, '') : null;
+    append(box, element('span', 'game-score-label', label), value);
+    if (error) append(box, error);
+    return { box, value, error };
+  }
+  function mount(container) {
+    if (root === container && root.children.length) return;
+    root = container; validateData();
+    root.classList.add('game-root'); root.replaceChildren();
+    ui = {};
+    ui.live = element('div', 'game-sr'); ui.live.setAttribute('aria-live', 'polite'); ui.live.setAttribute('aria-atomic', 'true');
+    const header = element('div', 'game-header');
+    const title = element('h1', 'game-title', 'Can you beat the AI?'); title.id = 'game-title';
+    append(header, title, element('p', 'game-intro-text', 'Predict what comes next in a mobile network. Three rounds. You versus the AI.'));
+    ui.intro = element('section', 'game-intro-panel');
+    const how = element('div', 'game-how');
+    [['01', 'Read the history', 'See six hours of recorded mobile-network throughput.'], ['02', 'Make your guess', 'Predict the throughput in Mbps at a future time.'], ['03', 'Meet your opponent', 'Reveal your error alongside the AI and a simple baseline.']].forEach(([n, title, description]) => {
+      const item = element('div', 'game-how-item'); append(item, element('span', 'game-step', n), element('h3', '', title), element('p', '', description)); append(how, item);
+    });
+    const entry = element('form', 'game-entry');
+    entry.addEventListener('submit', event => { event.preventDefault(); start(); });
+    const nameLabel = element('label', 'game-input-label', 'Your nickname (optional)'); nameLabel.htmlFor = 'game-nickname';
+    ui.nickname = element('input', 'game-nickname'); ui.nickname.id = 'game-nickname'; ui.nickname.maxLength = 24; ui.nickname.autocomplete = 'off'; ui.nickname.placeholder = 'Anonymous visitor';
+    ui.nickname.setAttribute('aria-describedby', 'game-name-note');
+    const nameNote = element('p', 'game-small', 'Your nickname and score will appear on the shared scoreboard. Leave blank to stay anonymous.'); nameNote.id = 'game-name-note';
+    ui.start = element('button', 'game-button game-button-primary game-start', 'Start the 3-round challenge →'); ui.start.type = 'submit';
+    append(entry, nameLabel, ui.nickname, nameNote, ui.start);
+    ui.poolNote = element('p', 'game-small', '');
+    append(ui.intro, how, ui.poolNote, entry, element('p', 'game-data-note', 'Saved, held-out site forecasts. The AI also used extra network measurements and calendar inputs. This is a fun challenge, not a controlled human-versus-AI experiment.'));
+
+    ui.play = element('section', 'game-play'); ui.play.hidden = true;
+    const context = element('div', 'game-context');
+    ui.round = element('span', 'game-round', ''); ui.site = element('span', 'game-site', '');
+    const resetButton = element('button', 'game-button game-button-quiet', 'Start over'); resetButton.type = 'button'; resetButton.addEventListener('click', reset);
+    append(context, ui.round, ui.site, resetButton);
+    ui.question = element('h2', 'game-question', ''); ui.question.tabIndex = -1;
+    const last = element('p', 'game-last', 'Latest recorded value: '); ui.last = element('strong', '', ''); append(last, ui.last);
+    ui.chart = element('div', 'game-chart'); ui.chartLegend = element('p', 'game-chart-legend', ''); ui.axisNote = element('p', 'game-axis-note', '');
+    const form = element('form', 'game-guess-form'); form.noValidate = true; form.addEventListener('submit', lockGuess);
+    ui.form = form;
+    const guessArea = element('div', 'game-guess-area');
+    const label = element('label', 'game-input-label', 'Your prediction'); label.htmlFor = 'game-guess-value';
+    const inputWrap = element('div', 'game-input-wrap');
+    ui.guess = element('input', 'game-number'); ui.guess.id = 'game-guess-value'; ui.guess.type = 'number'; ui.guess.min = '0'; ui.guess.max = '1000000'; ui.guess.step = '0.01'; ui.guess.inputMode = 'decimal'; ui.guess.autocomplete = 'off'; ui.guess.placeholder = 'Type a value'; ui.guess.setAttribute('aria-describedby', 'game-guess-error'); ui.guess.addEventListener('input', formatGuess);
+    append(inputWrap, ui.guess, element('span', 'game-input-unit', 'Mbps'));
+    ui.slider = element('input', 'game-slider'); ui.slider.type = 'range'; ui.slider.min = '0'; ui.slider.step = '0.01'; ui.slider.setAttribute('aria-label', 'Set your throughput prediction in Mbps'); ui.slider.addEventListener('input', () => { ui.guess.value = Number(ui.slider.value).toFixed(2); formatGuess(); });
+    append(guessArea, label, inputWrap, ui.slider);
+    ui.lock = element('button', 'game-button game-button-primary', 'Lock in my guess →'); ui.lock.type = 'submit';
+    ui.guessError = element('p', 'game-error', ''); ui.guessError.id = 'game-guess-error'; ui.guessError.setAttribute('role', 'alert');
+    append(form, guessArea, ui.lock, ui.guessError);
+    ui.progress = element('p', 'game-small', '');
+    ui.reveal = element('div', 'game-reveal'); ui.reveal.hidden = true;
+    ui.revealTitle = element('h3', '', ''); ui.revealTitle.tabIndex = -1; const actual = element('p', 'game-actual', 'Recorded outcome: '); ui.actual = element('strong', '', ''); append(actual, ui.actual);
+    const scores = element('div', 'game-scores');
+    const human = card('Your guess', 'game-score-value game-human', 'game-score-error'); ui.humanValue = human.value; ui.humanError = human.error;
+    const ai = card('AI forecast', 'game-score-value game-ai', 'game-score-error'); ui.aiValue = ai.value; ui.aiError = ai.error;
+    const baseline = card('Last-value baseline', 'game-score-value', 'game-score-error'); ui.baselineValue = baseline.value; ui.baselineError = baseline.error;
+    append(scores, human.box, ai.box, baseline.box); ui.explanation = element('p', 'game-small', ''); append(ui.reveal, ui.revealTitle, actual, scores, ui.explanation);
+    ui.next = element('button', 'game-button game-button-primary game-next', 'Next round →'); ui.next.type = 'button'; ui.next.hidden = true; ui.next.addEventListener('click', nextRound);
+    append(ui.play, context, ui.question, last, ui.chart, ui.chartLegend, ui.axisNote, form, ui.progress, ui.reveal, ui.next);
+
+    ui.finish = element('section', 'game-finish'); ui.finish.hidden = true;
+    ui.finishTitle = element('h2', 'game-finish-title', ''); ui.finishTitle.tabIndex = -1;
+    const finalScores = element('div', 'game-scores game-final-scores');
+    const finalHuman = card('Your average error', 'game-score-value game-human'); ui.finalHuman = finalHuman.value;
+    const finalAi = card('AI average error', 'game-score-value game-ai'); ui.finalAi = finalAi.value;
+    const finalBaseline = card('Last-value average error', 'game-score-value'); ui.finalBaseline = finalBaseline.value;
+    append(finalScores, finalHuman.box, finalAi.box, finalBaseline.box);
+    ui.finishDetail = element('p', 'game-small', '');
+    const detail = element('details', 'game-details'); append(detail, element('summary', '', 'See each round’s absolute error'));
+    const tableWrap = element('div', 'game-table-wrap'), table = element('table', 'game-table');
+    const head = element('thead'), headerRow = element('tr'); ['Round', 'You (Mbps)', 'AI (Mbps)', 'Last value (Mbps)'].forEach(text => append(headerRow, element('th', '', text))); append(head, headerRow); ui.roundTable = element('tbody'); append(table, head, ui.roundTable); append(tableWrap, table); append(detail, tableWrap);
+    const saveArea = element('div', 'game-save-area');
+    ui.save = element('button', 'game-button game-button-secondary', 'Retry saving score'); ui.save.type = 'button'; ui.save.hidden = true; ui.save.addEventListener('click', saveScore);
+    ui.saveStatus = element('p', 'game-small', ''); ui.saveStatus.setAttribute('role', 'status'); append(saveArea, ui.saveStatus, ui.save);
+    const replay = element('button', 'game-button game-button-primary', 'Play again →'); replay.type = 'button'; replay.addEventListener('click', reset);
+    append(ui.finish, ui.finishTitle, finalScores, ui.finishDetail, detail, saveArea, replay);
+
+    const leaderboard = element('section', 'game-leaderboard'); leaderboard.setAttribute('aria-labelledby', 'game-board-title');
+    const leaderHeader = element('div', 'game-leader-header');
+    ui.leaderLabel = element('h2', '', 'Scoreboard'); ui.leaderLabel.id = 'game-board-title';
+    ui.refresh = element('button', 'game-button game-button-quiet', 'Refresh'); ui.refresh.type = 'button'; ui.refresh.addEventListener('click', refreshLeaderboard);
+    append(leaderHeader, ui.leaderLabel, ui.refresh); append(leaderboard, leaderHeader);
+    append(leaderboard, element('p', 'game-small', 'Top 20 games · lowest average error wins. Same three rounds and 30-minute forecast for everyone. Completed games are submitted automatically.'));
+    ui.leaderMeta = element('p', 'game-small game-board-meta', '');
+    ui.leaderStatus = element('p', 'game-small game-board-status', ''); ui.leaderStatus.setAttribute('role', 'status');
+    ui.leaderEmpty = element('p', 'game-small', 'Scores will appear here once the scoreboard is connected.');
+    ui.leaderTable = element('table', 'game-table'); const leaderHead = element('thead'), leaderHeadRow = element('tr'); ['Rank', 'Visitor', 'Average error (Mbps)'].forEach(text => append(leaderHeadRow, element('th', '', text))); append(leaderHead, leaderHeadRow); ui.leaderRows = element('tbody'); append(ui.leaderTable, leaderHead, ui.leaderRows);
+    ui.leaderTable.hidden = true;
+    const leaderTableWrap = element('div', 'game-table-wrap'); append(leaderTableWrap, ui.leaderTable);
+    ui.pendingNote = element('p', 'game-small game-pending-note', '');
+    ui.retryPending = element('button', 'game-button game-button-secondary game-retry-pending', 'Retry pending scores'); ui.retryPending.type = 'button';
+    ui.retryPending.addEventListener('click', async () => {
+      pendingBusy = true; updatePending();
+      try { await window.BoothScoreboard.retryPending(); }
+      finally { pendingBusy = false; updatePending(); refreshLeaderboard(); }
+    });
+    append(leaderboard, ui.leaderMeta, ui.leaderEmpty, leaderTableWrap, ui.leaderStatus, ui.pendingNote, ui.retryPending);
+    append(root, ui.live, header, ui.intro, ui.play, ui.finish, leaderboard);
+    updateStart();
+    window.BoothScoreboard.subscribe(event => {
+      updatePending();
+      if (event.type === 'saved') {
+        if (submission?.submissionId === event.submissionId) {
+          ui.saveStatus.textContent = 'Your score is saved on the shared scoreboard.';
+          ui.save.hidden = true;
+        }
+        refreshLeaderboard();
+      } else if (['pending', 'error'].includes(event.type) && submission?.submissionId === event.submissionId) {
+        ui.saveStatus.textContent = pendingMessage(event.error, event.durable);
+        if (event.type === 'error') ui.save.hidden = false;
+      }
+    });
+    updatePending();
+    refreshLeaderboard();
+    setInterval(() => {
+      if (!document.hidden && window.BoothScoreboard.configured()) {
+        refreshLeaderboard();
+        window.BoothScoreboard.flush().catch(() => {});
+      }
+    }, 30000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshLeaderboard(); });
+    window.addEventListener('online', refreshLeaderboard);
+  }
+  let resizeFrame;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(() => {
+      if (!active || !current || !['guessing', 'revealed'].includes(phase)) return;
+      renderChart(phase === 'revealed');
+      if (phase === 'guessing') formatGuess();
+    });
+  });
+  window.BoothGame = {
+    mount,
+    activate() { active = true; },
+    deactivate() { active = false; },
+    reset,
+    // Read-only state makes automated offline checks possible without exposing future values in the UI.
+    status() { return { phase, horizon, round: roundIndex + 1, completedRounds: rounds.length, availableCases: candidates().length }; }
+  };
+})();
+
+</script>
+  <script>
+/* Standalone static game: all assets are bundled locally. */
+(() => {
+  'use strict';
+  const root = document.getElementById('game-view');
+  const error = document.getElementById('app-error');
+  try {
+    if (!window.BoothGame || !window.BoothScoreboard || !window.BOOTH_GAME_DATA?.cases?.length) {
+      throw new Error('Missing game files');
+    }
+    window.BoothGame.mount(root);
+    if (window.BoothGame.status().availableCases < 3) {
+      throw new Error('Not enough playable cases');
+    }
+    window.BoothGame.activate();
+  } catch (_) {
+    root.hidden = true;
+    error.hidden = false;
+    error.textContent = 'The game could not load. Please refresh the page and try again.';
+  }
+})();
+
+</script>
+</body>
+</html>
